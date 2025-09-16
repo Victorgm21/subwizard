@@ -1,2 +1,3 @@
 request
 faster-whisper
+torch

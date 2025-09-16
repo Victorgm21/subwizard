@@ -1,5 +1,5 @@
 import warnings
-# Suprime el UserWarning específico de pkg_resources
+# suprimir warning
 warnings.filterwarnings(
     "ignore",
     message="pkg_resources is deprecated as an API",
@@ -12,7 +12,7 @@ from utils import utils
 from cli_args import setup_argument_parser
 import sys, io
 
-# Reconfigurar stdout/stderr a UTF-8
+# problemas con imprimir emojis
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
