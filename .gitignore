@@ -181,6 +181,5 @@ cython_debug/
 .cursorindexingignore
 
 #Tools
-tools/*
-!tools/.gitkeep
+tools/
 
