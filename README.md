@@ -1,7 +1,7 @@
 # 🎬 SubWizard: Your Magical Subtitle Assistant 🧙‍♂️
 
 <p align="center">
-  <img src="https://images.unsplash.com/photo-1620786938928-863a3a416b71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxfHx3aXphcmQlMjBjcmVhdGluZyUyMHN1YnRpZGxlc3xlbnwwfHx8fDE3MjY1MTk0OTZ8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="A wizard creating subtitles">
+  <img src="https://iili.io/KASOvWX.jpg" alt="SubWizard's graphical user interface">
 </p>
 
 SubWizard is a powerful and user-friendly tool that automatically generates subtitles for your video and audio files. It leverages the impressive speed and accuracy of `faster-whisper` to transcribe spoken content. Whether you need an `.srt` file or want to burn the subtitles directly into your `.mp4` video, SubWizard has you covered.
@@ -10,7 +10,8 @@ SubWizard is a powerful and user-friendly tool that automatically generates subt
 
 * **Fast & Accurate Transcription:** Powered by `faster-whisper` for efficient and precise speech-to-text conversion.
 * **Flexible Output:** Generate standard `.srt` subtitle files or a new `.mp4` video with the subtitles permanently "burned in."
-* **Cross-Platform GUI:** A clean and intuitive graphical user interface built with `tkinter` makes it easy to use on Windows, macOS, and Linux.
+* **Intuitive GUI:** A clean and easy-to-use graphical user interface built with `tkinter` that works on Windows, macOS, and Linux.
+* **Automatic FFmpeg Installation:** The program includes a script to automatically download and set up FFmpeg binaries in a local directory. This means you don't need to install FFmpeg globally, as SubWizard will manage its own dependency.
 * **Performance Profiles:** Choose from different profiles (`efficient`, `normal`, `detailed`, `ultra-detailed`) to balance speed and accuracy, leveraging GPU acceleration if available.
 * **Language Detection:** Automatically detects the language of the audio, or you can specify it manually for better results.
 * **Command-Line Interface (CLI):** For advanced users, a robust CLI is available for automated workflows and scripting.
@@ -22,14 +23,14 @@ SubWizard is a powerful and user-friendly tool that automatically generates subt
 ### Prerequisites
 
 * Python 3.8 or higher.
-* `ffmpeg` for extracting audio from video and burning subtitles. SubWizard includes an automatic installer for Windows users.
+* **FFmpeg** is required for audio extraction and subtitle burning. This program will download and install the necessary FFmpeg binaries automatically for you in a local directory, so no manual installation is needed.
 
 ### Installation
 
 1.  Clone this repository:
     ```bash
-    git clone [https://github.com/your-username/sub-wizard.git](https://github.com/your-username/sub-wizard.git)
-    cd sub-wizard
+    git clone [https://github.com/Victorgm21/subwizard.git](https://github.com/Victorgm21/subwizard.git)
+    cd subwizard
     ```
 2.  Install the required Python packages:
     ```bash
@@ -59,37 +60,12 @@ Click "Generate Subtitles" to start the process.
 Using the Command-Line Interface (CLI)
 For command-line enthusiasts, you can use the sub_wizard.py script directly.
 
-Basic Usage
-Generate an .srt file for a video:
+Example Command
+This command transcribes the video juli.mp4, limits each subtitle line to 3 words, sets the output file name to juli_sub, saves the output as a new MP4 video with burned-in subtitles, and automatically detects the language.
 
 Bash
 
-python sub_wizard.py "path/to/your/video.mp4"
-The .srt file will be saved in the same directory as the video.
-
-Advanced Options
-Specify output path:
-
-Bash
-
-python sub_wizard.py "path/to/video.mp4" --output-path "/Users/You/Documents/MySubtitles"
-Burn subtitles into a new video:
-
-Bash
-
-python sub_wizard.py "path/to/video.mp4" --output-type mp4 --output-name "video_with_subs"
-This will create video_with_subs.mp4 with the subtitles embedded.
-
-Set a specific language:
-
-Bash
-
-python sub_wizard.py "path/to/video.mp4" --lang en
-Choose a performance profile:
-
-Bash
-
-python sub_wizard.py "path/to/video.mp4" --performance ultra-detailed
+python sub_wizard.py "C:/Users/user/Desktop/juli.mp4" --output-path "C:/Users/user/Desktop" --max-words 3 --performance normal --output-name juli_sub --output-type mp4 --lang auto
 For a full list of available arguments, use the --help flag:
 
 Bash
