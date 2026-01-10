@@ -1,7 +1,7 @@
 # 🎬 SubWizard: Your Magical Subtitle Assistant 🧙‍♂️
 
 <p align="center">
-  <img src="https://i.imgur.com/1t05I2y.png" alt="SubWizard's graphical user interface" width="600">
+  <img src="https://i.ibb.co/mpzpvdQ/Screenshot-1.png" alt="SubWizard's graphical user interface" width="600">
 </p>
 
 <p align="center">
