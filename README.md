@@ -86,8 +86,3 @@ For a full list of available arguments, use the `--help` flag:
 python subwizard.py --help
 ```
 
----
-
-## 🤝 Contributing
-
-We welcome contributions! Feel free to open an issue or submit a pull request if you have ideas for new features, bug fixes, or improvements.
