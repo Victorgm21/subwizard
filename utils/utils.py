@@ -3,27 +3,57 @@ import subprocess
 from .fmpeg_installer import ensure_ffmpeg
 import shutil
 from pathlib import Path
-
-import os
 import shutil
-import subprocess
 import tempfile
 import uuid
 import re
 import shlex
+import json
 
 
-def create_srt_file(output_path, srt_lines, file_name):
+def get_video_resolution(video_path):
+    try:
+        cmd = [
+            "ffprobe",
+            "-v", "error",
+            "-select_streams", "v:0",
+            "-show_entries", "stream=width,height",
+            "-of", "json",
+            video_path
+        ]
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            shell=False
+        )
+
+        data = json.loads(result.stdout)
+        stream = data["streams"][0]
+
+        width = int(stream["width"])
+        height = int(stream["height"])
+
+        return width, height
+
+    except Exception as e:
+        print("Error al detectar la resolucion", e)
+        return 1920, 1080
+
+
+
+def create_srt_file(output_path, srt_lines, file_name, extension):
 
 
     # Si output_path se especifica y es un directorio → escribir en esa carpeta
     if output_path and os.path.isdir(output_path):
-        output_path = os.path.join(output_path, file_name + ".srt")
+        output_path = os.path.join(output_path, file_name + extension)
 
 
     # Si no hay ni video_path ni output_path, usar el directorio actual
     elif not output_path:
-        output_path = os.path.join(os.getcwd(), file_name + ".srt")
+        output_path = os.path.join(os.getcwd(), file_name + extension)
 
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -47,6 +77,9 @@ def extract_audio_from_video(video_path, temp_folder="temp_files"):
     Extrae el audio de un archivo de video usando FFmpeg.
     Guarda el archivo en una carpeta temporal dentro del proyecto (donde está ubicado este script).
     """
+
+    width, height = get_video_resolution(video_path=video_path)
+
 
     # Ruta base: donde está este archivo (utils.py)
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -84,7 +117,7 @@ def extract_audio_from_video(video_path, temp_folder="temp_files"):
     except:
         print("error during separation of audio from video")
         
-    return audio_path
+    return audio_path, width, height
 
 
 def is_video_file(filename):
@@ -133,7 +166,7 @@ def burn_subtitles_into_video(new_video_name, video_path, srt_path, output_path=
     """
     Quema (burn) un .srt dentro del video usando ffmpeg.
     Devuelve la ruta del vídeo generado.
-    Requisitos: una función ensure_ffmpeg() existente que devuelva la ruta de ffmpeg.
+    Requisitos: función ensure_ffmpeg() existente que devuelva la ruta de ffmpeg.
     """
     # --- Obtener ffmpeg ---
     ffmpeg_path = ensure_ffmpeg()
@@ -141,9 +174,9 @@ def burn_subtitles_into_video(new_video_name, video_path, srt_path, output_path=
 
     # --- Validaciones ---
     if not os.path.isfile(video_path):
-        raise FileNotFoundError(f"❌ Video not found: {video_path}")
+        raise FileNotFoundError(f"Video not found: {video_path}")
     if not os.path.isfile(srt_path):
-        raise FileNotFoundError(f"❌ Subtitle file not found: {srt_path}")
+        raise FileNotFoundError(f"Subtitle file not found: {srt_path}")
 
     # --- Construir ruta de salida ---
     if output_path:
@@ -195,5 +228,5 @@ def burn_subtitles_into_video(new_video_name, video_path, srt_path, output_path=
         except Exception:
             pass
 
-    print("🎦 Video generado correctamente:", video_output_path)
+    print("Video generado correctamente:", video_output_path)
     return video_output_path

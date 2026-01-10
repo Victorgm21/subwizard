@@ -181,5 +181,6 @@ cython_debug/
 .cursorindexingignore
 
 #Tools
-tools/
 
+*.mp4
+*.srt

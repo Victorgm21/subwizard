@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SubWizard - Automatic Subtitler</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <h1 class="title">SubWizard</h1>
+
+      <fieldset class="section-group">
+        <legend>Input File</legend>
+        <div class="input-row">
+          <label for="input-path">Video / Audio</label>
+          <input
+            type="text"
+            id="input-path"
+            placeholder="No file selected"
+            readonly
+          />
+
+          <button type="button" class="btn-browse" onclick="selectInputFile()">
+            Browse
+          </button>
+        </div>
+      </fieldset>
+
+      <fieldset class="section-group">
+        <legend>Configuration</legend>
+        <div class="config-grid">
+          <div class="field">
+            <label>Words per line</label>
+            <input type="number" value="5" min="1" id="words-per-line" />
+          </div>
+          <div class="field">
+            <label>Performance</label>
+            <select id="select-performance">
+              <option value="efficient">efficient</option>
+              <option value="normal" selected>normal</option>
+              <option value="detailed">detailed</option>
+              <option value="ultra-detailed">ultra-detailed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Output format</label>
+            <select id="select-output-type">
+              <option value="srt">srt</option>
+              <option value="mp4">mp4</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Language</label>
+            <select id="select-language">
+              <option value="auto">auto</option>
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">Deutsch</option>
+              <option value="jp">Japanese</option>
+              <option value="kr">Korean</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Sub Style</label>
+            <select id="select-sub-style">
+              <option value="simple">simple</option>
+              <option value="karaoke">karaoke</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="section-group">
+        <legend>Output File</legend>
+        <div class="output-fields">
+          <div class="input-row">
+            <label>File name</label>
+            <input id="output-filename" type="text" value="subwizard" />
+          </div>
+          <div class="input-row">
+            <label>Destination folder</label>
+            <input
+              type="text"
+              id="output-path"
+              placeholder="Select folder..."
+              readonly
+            />
+
+            <button type="button" class="btn-browse" onclick="selectFolder()">
+              Browse
+            </button>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="action-area">
+        <button
+          id="btn-generate"
+          class="btn-generate"
+          onclick="generateSubtitles()"
+        >
+          Generate Subtitles
+        </button>
+        <p class="status-text" id="status-text">Ready</p>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,136 @@
+:root {
+  --bg-color: #2b2d3e;
+  --card-bg: #35384d;
+  --text-color: #a5a9d4;
+  --accent-color: #7b68ee;
+  --border-color: #4f5470;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.title {
+  color: var(--accent-color);
+  font-size: 32px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.section-group {
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+legend {
+  color: var(--accent-color);
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+label {
+  font-size: 13px;
+  min-width: 100px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: white;
+  padding: 5px;
+  flex-grow: 1;
+}
+
+button.btn-browse {
+  background: #3e4259;
+  color: white;
+  border: 1px solid var(--border-color);
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.field select,
+.field input {
+  width: 80px;
+  flex-grow: 0;
+}
+
+.btn-generate {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 20px 0;
+}
+
+.progress-container {
+  width: 100%;
+  max-width: 500px;
+  height: 25px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 10px;
+}
+
+.status {
+  color: #4caf50;
+  font-size: 14px;
+}
+
+/* */
+
+/* Fondo y texto del desplegable */
+select {
+  background-color: var(--card-bg); /* fondo del select cerrado */
+  color: white;
+}
+
+/* Fondo y texto de las opciones */
+select option {
+  background-color: var(--card-bg);
+  color: white;
+}
+
+/* Cuando una opción está seleccionada o en hover */
+select option:checked,
+select option:hover {
+  background-color: var(--accent-color);
+  color: white;
+}

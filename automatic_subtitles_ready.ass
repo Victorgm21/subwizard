@@ -1,0 +1,123 @@
+[Script Info]
+Title: Karaoke Style Subtitles
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Montserrat,72,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,1,0,0,0,100,100,0,0,1,4,0,2,80,80,220,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+Dialogue: 0,0:00:00.00,0:00:00.20,Default,,0,0,0,,{\c&H0000FF&} tengo{\c&HFFFFFF&}  un  dilema
+Dialogue: 0,0:00:00.20,0:00:00.28,Default,,0,0,0,, tengo {\c&H0000FF&} un{\c&HFFFFFF&}  dilema
+Dialogue: 0,0:00:00.28,0:00:00.64,Default,,0,0,0,, tengo  un {\c&H0000FF&} dilema{\c&HFFFFFF&}
+Dialogue: 0,0:00:00.64,0:00:01.12,Default,,0,0,0,,{\c&H0000FF&} si{\c&HFFFFFF&}  publico  un
+Dialogue: 0,0:00:01.12,0:00:01.58,Default,,0,0,0,, si {\c&H0000FF&} publico{\c&HFFFFFF&}  un
+Dialogue: 0,0:00:01.58,0:00:01.64,Default,,0,0,0,, si  publico {\c&H0000FF&} un{\c&HFFFFFF&}
+Dialogue: 0,0:00:01.64,0:00:01.80,Default,,0,0,0,,{\c&H0000FF&} vídeo{\c&HFFFFFF&}  crees  que
+Dialogue: 0,0:00:01.80,0:00:02.12,Default,,0,0,0,, vídeo {\c&H0000FF&} crees{\c&HFFFFFF&}  que
+Dialogue: 0,0:00:02.12,0:00:02.24,Default,,0,0,0,, vídeo  crees {\c&H0000FF&} que{\c&HFFFFFF&}
+Dialogue: 0,0:00:02.24,0:00:02.58,Default,,0,0,0,,{\c&H0000FF&} Vegetta{\c&HFFFFFF&}  se  va
+Dialogue: 0,0:00:02.58,0:00:02.70,Default,,0,0,0,, Vegetta {\c&H0000FF&} se{\c&HFFFFFF&}  va
+Dialogue: 0,0:00:02.70,0:00:02.80,Default,,0,0,0,, Vegetta  se {\c&H0000FF&} va{\c&HFFFFFF&}
+Dialogue: 0,0:00:02.80,0:00:02.94,Default,,0,0,0,,{\c&H0000FF&} a{\c&HFFFFFF&}  enfadar?  yo
+Dialogue: 0,0:00:02.94,0:00:03.62,Default,,0,0,0,, a {\c&H0000FF&} enfadar?{\c&HFFFFFF&}  yo
+Dialogue: 0,0:00:03.62,0:00:03.76,Default,,0,0,0,, a  enfadar? {\c&H0000FF&} yo{\c&HFFFFFF&}
+Dialogue: 0,0:00:03.76,0:00:03.98,Default,,0,0,0,,{\c&H0000FF&} digo{\c&HFFFFFF&}  si  pero
+Dialogue: 0,0:00:03.98,0:00:04.34,Default,,0,0,0,, digo {\c&H0000FF&} si{\c&HFFFFFF&}  pero
+Dialogue: 0,0:00:04.34,0:00:04.90,Default,,0,0,0,, digo  si {\c&H0000FF&} pero{\c&HFFFFFF&}
+Dialogue: 0,0:00:04.90,0:00:05.50,Default,,0,0,0,,{\c&H0000FF&} este{\c&HFFFFFF&}  vídeo
+Dialogue: 0,0:00:05.50,0:00:05.72,Default,,0,0,0,, este {\c&H0000FF&} vídeo{\c&HFFFFFF&}
+Dialogue: 0,0:00:05.72,0:00:05.92,Default,,0,0,0,,{\c&H0000FF&} porque{\c&HFFFFFF&}  no  lo
+Dialogue: 0,0:00:05.92,0:00:06.10,Default,,0,0,0,, porque {\c&H0000FF&} no{\c&HFFFFFF&}  lo
+Dialogue: 0,0:00:06.10,0:00:06.22,Default,,0,0,0,, porque  no {\c&H0000FF&} lo{\c&HFFFFFF&}
+Dialogue: 0,0:00:06.22,0:00:06.26,Default,,0,0,0,,{\c&H0000FF&} ha{\c&HFFFFFF&}  subido  en
+Dialogue: 0,0:00:06.26,0:00:06.70,Default,,0,0,0,, ha {\c&H0000FF&} subido{\c&HFFFFFF&}  en
+Dialogue: 0,0:00:06.70,0:00:07.12,Default,,0,0,0,, ha  subido {\c&H0000FF&} en{\c&HFFFFFF&}
+Dialogue: 0,0:00:07.12,0:00:07.24,Default,,0,0,0,,{\c&H0000FF&} tanto{\c&HFFFFFF&}  tiempo  tiene
+Dialogue: 0,0:00:07.24,0:00:07.50,Default,,0,0,0,, tanto {\c&H0000FF&} tiempo{\c&HFFFFFF&}  tiene
+Dialogue: 0,0:00:07.50,0:00:07.76,Default,,0,0,0,, tanto  tiempo {\c&H0000FF&} tiene{\c&HFFFFFF&}
+Dialogue: 0,0:00:07.76,0:00:08.24,Default,,0,0,0,,{\c&H0000FF&} vídeos{\c&HFFFFFF&}  de  a
+Dialogue: 0,0:00:08.24,0:00:08.70,Default,,0,0,0,, vídeos {\c&H0000FF&} de{\c&HFFFFFF&}  a
+Dialogue: 0,0:00:08.70,0:00:09.40,Default,,0,0,0,, vídeos  de {\c&H0000FF&} a{\c&HFFFFFF&}
+Dialogue: 0,0:00:09.40,0:00:09.98,Default,,0,0,0,,{\c&H0000FF&} temporales{\c&HFFFFFF&}  que  ostras
+Dialogue: 0,0:00:09.98,0:00:10.26,Default,,0,0,0,, temporales {\c&H0000FF&} que{\c&HFFFFFF&}  ostras
+Dialogue: 0,0:00:10.26,0:00:10.82,Default,,0,0,0,, temporales  que {\c&H0000FF&} ostras{\c&HFFFFFF&}
+Dialogue: 0,0:00:10.82,0:00:11.30,Default,,0,0,0,,{\c&H0000FF&} tener{\c&HFFFFFF&}  un  vídeo
+Dialogue: 0,0:00:11.30,0:00:11.42,Default,,0,0,0,, tener {\c&H0000FF&} un{\c&HFFFFFF&}  vídeo
+Dialogue: 0,0:00:11.42,0:00:11.58,Default,,0,0,0,, tener  un {\c&H0000FF&} vídeo{\c&HFFFFFF&}
+Dialogue: 0,0:00:11.58,0:00:11.72,Default,,0,0,0,,{\c&H0000FF&} de{\c&HFFFFFF&}
+Dialogue: 0,0:00:11.72,0:00:11.98,Default,,0,0,0,,{\c&H0000FF&} viernes{\c&HFFFFFF&}  13  yo
+Dialogue: 0,0:00:11.98,0:00:12.26,Default,,0,0,0,, viernes {\c&H0000FF&} 13{\c&HFFFFFF&}  yo
+Dialogue: 0,0:00:12.26,0:00:12.56,Default,,0,0,0,, viernes  13 {\c&H0000FF&} yo{\c&HFFFFFF&}
+Dialogue: 0,0:00:12.56,0:00:12.70,Default,,0,0,0,,{\c&H0000FF&} creo{\c&HFFFFFF&}  que  yo
+Dialogue: 0,0:00:12.70,0:00:12.86,Default,,0,0,0,, creo {\c&H0000FF&} que{\c&HFFFFFF&}  yo
+Dialogue: 0,0:00:12.86,0:00:13.44,Default,,0,0,0,, creo  que {\c&H0000FF&} yo{\c&HFFFFFF&}
+Dialogue: 0,0:00:13.44,0:00:13.54,Default,,0,0,0,,{\c&H0000FF&} no{\c&HFFFFFF&}  Vegetta  no
+Dialogue: 0,0:00:13.54,0:00:13.80,Default,,0,0,0,, no {\c&H0000FF&} Vegetta{\c&HFFFFFF&}  no
+Dialogue: 0,0:00:13.80,0:00:13.90,Default,,0,0,0,, no  Vegetta {\c&H0000FF&} no{\c&HFFFFFF&}
+Dialogue: 0,0:00:13.90,0:00:14.08,Default,,0,0,0,,{\c&H0000FF&} sabe{\c&HFFFFFF&}  que  lo
+Dialogue: 0,0:00:14.08,0:00:14.18,Default,,0,0,0,, sabe {\c&H0000FF&} que{\c&HFFFFFF&}  lo
+Dialogue: 0,0:00:14.18,0:00:14.28,Default,,0,0,0,, sabe  que {\c&H0000FF&} lo{\c&HFFFFFF&}
+Dialogue: 0,0:00:14.28,0:00:14.42,Default,,0,0,0,,{\c&H0000FF&} tiene{\c&HFFFFFF&}  ahí  yo
+Dialogue: 0,0:00:14.42,0:00:14.70,Default,,0,0,0,, tiene {\c&H0000FF&} ahí{\c&HFFFFFF&}  yo
+Dialogue: 0,0:00:14.70,0:00:14.98,Default,,0,0,0,, tiene  ahí {\c&H0000FF&} yo{\c&HFFFFFF&}
+Dialogue: 0,0:00:14.98,0:00:15.08,Default,,0,0,0,,{\c&H0000FF&} creo{\c&HFFFFFF&}  que  si
+Dialogue: 0,0:00:15.08,0:00:15.14,Default,,0,0,0,, creo {\c&H0000FF&} que{\c&HFFFFFF&}  si
+Dialogue: 0,0:00:15.14,0:00:15.24,Default,,0,0,0,, creo  que {\c&H0000FF&} si{\c&HFFFFFF&}
+Dialogue: 0,0:00:15.24,0:00:15.36,Default,,0,0,0,,{\c&H0000FF&} lo{\c&HFFFFFF&}  publico  se
+Dialogue: 0,0:00:15.36,0:00:16.04,Default,,0,0,0,, lo {\c&H0000FF&} publico{\c&HFFFFFF&}  se
+Dialogue: 0,0:00:16.04,0:00:16.24,Default,,0,0,0,, lo  publico {\c&H0000FF&} se{\c&HFFFFFF&}
+Dialogue: 0,0:00:16.24,0:00:16.32,Default,,0,0,0,,{\c&H0000FF&} va{\c&HFFFFFF&}  a  poner
+Dialogue: 0,0:00:16.32,0:00:16.36,Default,,0,0,0,, va {\c&H0000FF&} a{\c&HFFFFFF&}  poner
+Dialogue: 0,0:00:16.36,0:00:16.42,Default,,0,0,0,, va  a {\c&H0000FF&} poner{\c&HFFFFFF&}
+Dialogue: 0,0:00:16.42,0:00:16.88,Default,,0,0,0,,{\c&H0000FF&} contento{\c&HFFFFFF&}  y  va
+Dialogue: 0,0:00:16.88,0:00:16.88,Default,,0,0,0,, contento {\c&H0000FF&} y{\c&HFFFFFF&}  va
+Dialogue: 0,0:00:16.88,0:00:16.98,Default,,0,0,0,, contento  y {\c&H0000FF&} va{\c&HFFFFFF&}
+Dialogue: 0,0:00:16.98,0:00:17.04,Default,,0,0,0,,{\c&H0000FF&} a{\c&HFFFFFF&}  decir  mira
+Dialogue: 0,0:00:17.04,0:00:17.30,Default,,0,0,0,, a {\c&H0000FF&} decir{\c&HFFFFFF&}  mira
+Dialogue: 0,0:00:17.30,0:00:18.08,Default,,0,0,0,, a  decir {\c&H0000FF&} mira{\c&HFFFFFF&}
+Dialogue: 0,0:00:18.08,0:00:18.30,Default,,0,0,0,,{\c&H0000FF&} qué{\c&HFFFFFF&}  bien  se
+Dialogue: 0,0:00:18.30,0:00:18.54,Default,,0,0,0,, qué {\c&H0000FF&} bien{\c&HFFFFFF&}  se
+Dialogue: 0,0:00:18.54,0:00:18.82,Default,,0,0,0,, qué  bien {\c&H0000FF&} se{\c&HFFFFFF&}
+Dialogue: 0,0:00:18.82,0:00:18.86,Default,,0,0,0,,{\c&H0000FF&} ha{\c&HFFFFFF&}  publicado  solo
+Dialogue: 0,0:00:18.86,0:00:19.24,Default,,0,0,0,, ha {\c&H0000FF&} publicado{\c&HFFFFFF&}  solo
+Dialogue: 0,0:00:19.24,0:00:19.46,Default,,0,0,0,, ha  publicado {\c&H0000FF&} solo{\c&HFFFFFF&}
+Dialogue: 0,0:00:19.46,0:00:19.62,Default,,0,0,0,,{\c&H0000FF&} yo{\c&HFFFFFF&}  lo  que
+Dialogue: 0,0:00:19.62,0:00:19.70,Default,,0,0,0,, yo {\c&H0000FF&} lo{\c&HFFFFFF&}  que
+Dialogue: 0,0:00:19.70,0:00:19.74,Default,,0,0,0,, yo  lo {\c&H0000FF&} que{\c&HFFFFFF&}
+Dialogue: 0,0:00:19.74,0:00:19.82,Default,,0,0,0,,{\c&H0000FF&} va{\c&HFFFFFF&}  a  pensar
+Dialogue: 0,0:00:19.82,0:00:19.84,Default,,0,0,0,, va {\c&H0000FF&} a{\c&HFFFFFF&}  pensar
+Dialogue: 0,0:00:19.84,0:00:19.98,Default,,0,0,0,, va  a {\c&H0000FF&} pensar{\c&HFFFFFF&}
+Dialogue: 0,0:00:19.98,0:00:20.10,Default,,0,0,0,,{\c&H0000FF&} que{\c&HFFFFFF&}  se  ha
+Dialogue: 0,0:00:20.10,0:00:20.18,Default,,0,0,0,, que {\c&H0000FF&} se{\c&HFFFFFF&}  ha
+Dialogue: 0,0:00:20.18,0:00:20.22,Default,,0,0,0,, que  se {\c&H0000FF&} ha{\c&HFFFFFF&}
+Dialogue: 0,0:00:20.22,0:00:20.62,Default,,0,0,0,,{\c&H0000FF&} publicado{\c&HFFFFFF&}
+Dialogue: 0,0:00:20.62,0:00:20.86,Default,,0,0,0,,{\c&H0000FF&} solo{\c&HFFFFFF&}  no  puedo
+Dialogue: 0,0:00:20.86,0:00:21.36,Default,,0,0,0,, solo {\c&H0000FF&} no{\c&HFFFFFF&}  puedo
+Dialogue: 0,0:00:21.36,0:00:21.52,Default,,0,0,0,, solo  no {\c&H0000FF&} puedo{\c&HFFFFFF&}
+Dialogue: 0,0:00:21.52,0:00:21.68,Default,,0,0,0,,{\c&H0000FF&} poner{\c&HFFFFFF&}  no  puedo
+Dialogue: 0,0:00:21.68,0:00:22.10,Default,,0,0,0,, poner {\c&H0000FF&} no{\c&HFFFFFF&}  puedo
+Dialogue: 0,0:00:22.10,0:00:22.32,Default,,0,0,0,, poner  no {\c&H0000FF&} puedo{\c&HFFFFFF&}
+Dialogue: 0,0:00:22.32,0:00:22.48,Default,,0,0,0,,{\c&H0000FF&} poner{\c&HFFFFFF&}  el  título
+Dialogue: 0,0:00:22.48,0:00:22.58,Default,,0,0,0,, poner {\c&H0000FF&} el{\c&HFFFFFF&}  título
+Dialogue: 0,0:00:22.58,0:00:22.82,Default,,0,0,0,, poner  el {\c&H0000FF&} título{\c&HFFFFFF&}
+Dialogue: 0,0:00:22.82,0:00:23.30,Default,,0,0,0,,{\c&H0000FF&} este{\c&HFFFFFF&}  vídeo  es
+Dialogue: 0,0:00:23.30,0:00:23.50,Default,,0,0,0,, este {\c&H0000FF&} vídeo{\c&HFFFFFF&}  es
+Dialogue: 0,0:00:23.50,0:00:23.62,Default,,0,0,0,, este  vídeo {\c&H0000FF&} es{\c&HFFFFFF&}
+Dialogue: 0,0:00:23.62,0:00:23.74,Default,,0,0,0,,{\c&H0000FF&} un{\c&HFFFFFF&}  regalo  no
+Dialogue: 0,0:00:23.74,0:00:24.08,Default,,0,0,0,, un {\c&H0000FF&} regalo{\c&HFFFFFF&}  no
+Dialogue: 0,0:00:24.08,0:00:24.38,Default,,0,0,0,, un  regalo {\c&H0000FF&} no{\c&HFFFFFF&}
+Dialogue: 0,0:00:24.38,0:00:24.60,Default,,0,0,0,,{\c&H0000FF&} puedo{\c&HFFFFFF&}  ponerlo  tiene
+Dialogue: 0,0:00:24.60,0:00:24.98,Default,,0,0,0,, puedo {\c&H0000FF&} ponerlo{\c&HFFFFFF&}  tiene
+Dialogue: 0,0:00:24.98,0:00:25.14,Default,,0,0,0,, puedo  ponerlo {\c&H0000FF&} tiene{\c&HFFFFFF&}
+Dialogue: 0,0:00:25.14,0:00:25.24,Default,,0,0,0,,{\c&H0000FF&} que{\c&HFFFFFF&}  ser
+Dialogue: 0,0:00:25.24,0:00:25.36,Default,,0,0,0,, que {\c&H0000FF&} ser{\c&HFFFFFF&}
+Dialogue: 0,0:00:25.36,0:00:25.54,Default,,0,0,0,,{\c&H0000FF&} otro{\c&HFFFFFF&}  ciclo  distinto
+Dialogue: 0,0:00:25.54,0:00:25.78,Default,,0,0,0,, otro {\c&H0000FF&} ciclo{\c&HFFFFFF&}  distinto
+Dialogue: 0,0:00:25.78,0:00:26.18,Default,,0,0,0,, otro  ciclo {\c&H0000FF&} distinto{\c&HFFFFFF&}
