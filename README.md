@@ -9,7 +9,7 @@
   <a href="https://www.python.org/downloads/release/python-380/"><img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+"></a>
 </p>
 
-SubWizard is a powerful and user-friendly tool that automatically generates subtitles for your video and audio files. It leverages the impressive speed and accuracy of `faster-whisper` to transcribe spoken content. Whether you need an `.srt` file or want to burn the subtitles directly into your `.mp4` video, SubWizard has you covered.
+SubWizard is a powerful and user-friendly tool that automatically generates subtitles for your video and audio files (ONLY WINDOWS). It leverages the impressive speed and accuracy of `faster-whisper` to transcribe spoken content. Whether you need an `.srt` file or want to burn the subtitles directly into your `.mp4` video, SubWizard has you covered.
 
 ---
 
@@ -17,7 +17,7 @@ SubWizard is a powerful and user-friendly tool that automatically generates subt
 
 - **Fast & Accurate Transcription:** Powered by `faster-whisper` for efficient and precise speech-to-text conversion.
 - **Flexible Output:** Generate standard `.srt` subtitle files or a new `.mp4` video with the subtitles permanently "burned in."
-- **Intuitive GUI:** A clean and easy-to-use graphical user interface that works on Windows, macOS, and Linux.
+- **Intuitive GUI:** A clean and easy-to-use graphical user interface that works on Windows.
 - **Automatic FFmpeg Handling:** SubWizard automatically downloads and manages its own FFmpeg dependency, so you don't need to install it globally.
 - **Performance Profiles:** Choose from different profiles (`efficient`, `normal`, `detailed`, `ultra-detailed`) to balance speed and accuracy, with GPU acceleration if available.
 - **Language Detection:** Automatically detects the audio language, or you can specify it manually for better results.
@@ -78,7 +78,7 @@ For command-line enthusiasts, you can use the `subwizard.py` script directly.
 This command transcribes `juli.mp4`, limits each subtitle line to 3 words, sets the output file name to `juli_sub`, saves the output as a new MP4 video with burned-in subtitles, and automatically detects the language.
 
 ```bash
-python subwizard.py "C:/Users/user/Desktop/juli.mp4" --output-path "C:/Users/user/Desktop" --max-words 3 --performance normal --output-name juli_sub --output-type mp4 --lang auto
+python subwizard.py juli.mp4
 ```
 
 For a full list of available arguments, use the `--help` flag:
