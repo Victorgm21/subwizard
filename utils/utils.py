@@ -1,6 +1,6 @@
 import os
 import subprocess
-from .fmpeg_installer import ensure_ffmpeg
+from .fmpeg_installer import ensure_ffmpeg, ensure_ffprobe
 import shutil
 from pathlib import Path
 import shutil
@@ -13,8 +13,10 @@ import json
 
 def get_video_resolution(video_path):
     try:
+        ffprobe_path = ensure_ffprobe()
+        print("PATH DEL FFPROBE: ", ffprobe_path)
         cmd = [
-            "ffprobe",
+            ffprobe_path,
             "-v", "error",
             "-select_streams", "v:0",
             "-show_entries", "stream=width,height",
@@ -35,11 +37,11 @@ def get_video_resolution(video_path):
         width = int(stream["width"])
         height = int(stream["height"])
 
-        return width, height
+        return height, width
 
     except Exception as e:
         print("Error al detectar la resolucion", e)
-        return 1920, 1080
+        return 0, 0
 
 
 

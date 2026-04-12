@@ -21,6 +21,7 @@ from faster_whisper import WhisperModel
 from utils import utils
 from cli_args import setup_argument_parser
 import styles
+from sub_styles import karaoke, simple
 
 
 
@@ -78,11 +79,11 @@ def transcribe_to_srt(
 
     if style=="simple":
         #sort words in SRT simple
-        srt_lines = styles.sort_in_srt(segments, max_words_per_line)
+        srt_lines = simple.sort_in_srt(segments, max_words_per_line)
         extension = ".srt"
     elif style == "karaoke":
         extension = ".ass"
-        srt_lines = styles.karaoke_style(segments, max_words_per_line, video_width, video_height)
+        srt_lines = karaoke.karaoke_style(segments, max_words_per_line, video_width, video_height)
 
     # Write subtitle file in disk
     subtitles_path = utils.create_srt_file(output_path, srt_lines, file_name, extension)

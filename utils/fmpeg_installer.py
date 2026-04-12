@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TOOLS_DIR = os.path.join(BASE_DIR, "..", "tools")  
 FFMPEG_DIR = os.path.join(TOOLS_DIR, "ffmpeg")
 FFMPEG_BIN = os.path.join(FFMPEG_DIR, "bin", "ffmpeg.exe" if platform.system() == "Windows" else "ffmpeg")
-
+FFPROBE_BIN = os.path.join(FFMPEG_DIR, "bin", "ffprobe.exe" if platform.system() == "Windows" else "ffprobe")
 
 def get_ffmpeg_path():
     # FMPEG IN SYSTEM PATH?
@@ -23,6 +23,21 @@ def get_ffmpeg_path():
     # CHECK LOCAL INSTALL
     if os.path.isfile(FFMPEG_BIN):
         return FFMPEG_BIN
+
+    return None
+
+
+def get_ffprobe_path():
+    # FMPEG IN SYSTEM PATH?
+    """
+    ffmpeg_global = shutil.which("ffmpeg")
+    if ffmpeg_global:
+        return ffmpeg_global
+    """
+
+    # CHECK LOCAL INSTALL
+    if os.path.isfile(FFPROBE_BIN):
+        return FFPROBE_BIN
 
     return None
 
@@ -65,8 +80,22 @@ def ensure_ffmpeg():
         return ffmpeg_path
 
     if platform.system() == "Windows":
-        install_ffmpeg_windows()
+        #install_ffmpeg_windows()
         return get_ffmpeg_path()
+    else:
+        print("❌ FFmpeg is not available and automatic download is not yet implemented for your OS.")
+        print("ℹ️ Install it manually from https://ffmpeg.org/download.html")
+        exit(1)
+
+
+def ensure_ffprobe():
+    ffprobe = get_ffprobe_path()
+    if ffprobe:
+        return ffprobe
+
+    if platform.system() == "Windows":
+        #install_ffmpeg_windows()
+        return get_ffprobe_path()
     else:
         print("❌ FFmpeg is not available and automatic download is not yet implemented for your OS.")
         print("ℹ️ Install it manually from https://ffmpeg.org/download.html")

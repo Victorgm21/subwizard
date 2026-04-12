@@ -1,50 +1,3 @@
-# Local
-from utils import utils
-import os
-
-def render_video(video_path, video_name, srt_file_path, output_path):
-    if utils.is_video_file(video_path):
-        try:
-            utils.burn_subtitles_into_video(video_name, video_path, srt_file_path, output_path)
-        except Exception as e:
-            print(f"error: {e}")
-        finally:
-            pass
-    else:
-        print("invalid video file")
-
-
-def sort_in_srt(segments, max_words_per_line):
-
-    srt_lines = []
-    group = []
-    index = 1
-    for segment in segments:
-        words = segment.words
-        i = 0
-
-        while i < len(words):
-            group = words[i:i+max_words_per_line]
-            start_time = group[0].start
-            if i + max_words_per_line < len(words):
-                end_time = words[i + max_words_per_line].start
-            else:
-                end_time = group[-1].end
-
-            text = " ".join(w.word for w in group)
-            srt_lines.append(f"{index}\n{utils.format_timestamp(start_time)} --> {utils.format_timestamp(end_time)}\n{text}\n")
-            index += 1
-            i += max_words_per_line
-    # Save remaining words
-    if group:
-        start = utils.format_timestamp(group[0].start)
-        end = utils.format_timestamp(group[-1].end)
-        text = " ".join(w.word for w in group)
-        srt_lines.append(f"{index}\n{start} --> {end}\n{text}\n")
-
-    return srt_lines
-
-
 #
 #
 # FUNCIONES PARA EL ESTILO KARAOKE
@@ -63,7 +16,7 @@ def ass_header(width, height):
         "",
         "[V4+ Styles]",
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        "Style: Roboto,Default,Montserrat,80,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,1,0,0,0,100,100,0,0,1,4,0,2,80,80,220,1",
+        "Style: Default,Montserrat,80,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,1,0,0,0,100,100,0,0,1,4,0,2,80,80,220,1",
         "",
         "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
@@ -136,7 +89,3 @@ def karaoke_style(segments, max_words_per_line, width, height):
             i += max_words_per_line  # ⬅️ CLAVE
 
     return ass_lines
-
-
-
-
