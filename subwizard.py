@@ -20,8 +20,8 @@ from faster_whisper import WhisperModel
 # Local
 from utils import utils
 from cli_args import setup_argument_parser
-import styles
-from sub_styles import karaoke, simple
+from sub_styles import karaoke, simple, segments_to_json
+from utils import render_video
 
 
 
@@ -74,16 +74,21 @@ def transcribe_to_srt(
         segments, _info = model.transcribe(audio_path, beam_size = beam_size, word_timestamps=True)
     else:
         segments, _info = model.transcribe(audio_path, beam_size = beam_size, word_timestamps=True, language=language)
+
+    segments = list(segments)
+
+    # Save or Not JSON file with the SUBS
+    word_data = segments_to_json.segments_to_json(segments, output_path, True)
     
 
 
     if style=="simple":
         #sort words in SRT simple
-        srt_lines = simple.sort_in_srt(segments, max_words_per_line)
+        srt_lines = simple.sort_in_srt(word_data["words"], max_words_per_line)
         extension = ".srt"
     elif style == "karaoke":
         extension = ".ass"
-        srt_lines = karaoke.karaoke_style(segments, max_words_per_line, video_width, video_height)
+        srt_lines = karaoke.karaoke_style(word_data["words"], max_words_per_line, video_width, video_height)
 
     # Write subtitle file in disk
     subtitles_path = utils.create_srt_file(output_path, srt_lines, file_name, extension)
@@ -103,9 +108,10 @@ def transcribe_to_srt(
 def generate_mp4_file(video_name, video_path, srt_file_path, output_path, style):
 
     if style == "simple":
-        styles.render_video(video_path, video_name, srt_file_path, output_path)
+        render_video.render_video(video_path, video_name, srt_file_path, output_path)
     if style == "karaoke":
-        styles.render_video(video_path, video_name, srt_file_path, output_path)
+        render_video.render_video(video_path, video_name, srt_file_path, output_path)
+        
 
 
 if __name__ == "__main__":

@@ -1,9 +1,3 @@
-#
-#
-# FUNCIONES PARA EL ESTILO KARAOKE
-#
-#
-
 def ass_header(width, height):
     return [
         "[Script Info]",
@@ -31,7 +25,6 @@ def ass_word(word, active=False):
     return word
 
 
-
 def format_timestamp_ass(seconds):
     h = int(seconds // 3600)
     m = int((seconds % 3600) // 60)
@@ -39,53 +32,46 @@ def format_timestamp_ass(seconds):
     return f"{h}:{m:02d}:{s:05.2f}"
 
 
+def karaoke_style(words, max_words_per_line, width, height):
 
-def karaoke_style(segments, max_words_per_line, width, height):
-
-    # palabras minimas por linea
     if max_words_per_line < 2:
         max_words_per_line = 2
+
     ass_lines = []
     ass_lines.extend(ass_header(width, height))
 
-    for segment in segments:
-        words = segment.words
-        i = 0
+    i = 0
+    while i < len(words):
+        group = words[i:i + max_words_per_line]
 
-        while i < len(words):
-            # 🔒 BLOQUE FIJO
-            group = words[i:i + max_words_per_line]
+        if i + max_words_per_line < len(words):
+            group_end_time = words[i + max_words_per_line]["start"]
+        else:
+            group_end_time = group[-1]["end"]
 
-            # fin del bloque
-            if i + max_words_per_line < len(words):
-                group_end_time = words[i + max_words_per_line].start
+        for idx, word in enumerate(group):
+            start_time = word["start"]
+
+            if idx + 1 < len(group):
+                end_time = group[idx + 1]["start"]
             else:
-                group_end_time = group[-1].end
+                end_time = group_end_time
 
-            for idx, word in enumerate(group):
-                start_time = word.start
+            rendered_words = [
+                ass_word(w["word"], j == idx)
+                for j, w in enumerate(group)
+            ]
 
-                # ⏱️ timing exacto
-                if idx + 1 < len(group):
-                    end_time = group[idx + 1].start
-                else:
-                    end_time = group_end_time
+            text = " ".join(rendered_words)
 
-                rendered_words = [
-                    ass_word(w.word, j == idx)
-                    for j, w in enumerate(group)
-                ]
+            ass_lines.append(
+                f"Dialogue: 0,"
+                f"{format_timestamp_ass(start_time)},"
+                f"{format_timestamp_ass(end_time)},"
+                f"Default,,0,0,0,,"
+                f"{text}"
+            )
 
-                text = " ".join(rendered_words)
-
-                ass_lines.append(
-                    f"Dialogue: 0,"
-                    f"{format_timestamp_ass(start_time)},"
-                    f"{format_timestamp_ass(end_time)},"
-                    f"Default,,0,0,0,,"
-                    f"{text}"
-                )
-
-            i += max_words_per_line  # ⬅️ CLAVE
+        i += max_words_per_line
 
     return ass_lines

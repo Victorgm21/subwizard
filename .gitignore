@@ -185,3 +185,5 @@ cython_debug/
 *.mp4
 *.srt
 *.ass
+*.wav
+*.mp3
