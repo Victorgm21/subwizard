@@ -1,4 +1,7 @@
-def ass_header(width, height):
+from utils.config_loader import get_ass_config
+
+
+def ass_header(width, height, cfg):
     return [
         "[Script Info]",
         "Title: Word Pop Style Subtitles",
@@ -10,7 +13,22 @@ def ass_header(width, height):
         "",
         "[V4+ Styles]",
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        "Style: Default,Montserrat,50,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,1,0,0,0,100,100,0,0,1,4,0,2,80,80,100,1",
+        f"Style: Default,"
+        f"{cfg['font_family']},"
+        f"{cfg['font_size']},"
+        f"{cfg['primary_color']},"
+        f"{cfg['highlight_color']},"
+        f"{cfg['outline_color']},"
+        f"{cfg['back_color']},"
+        f"{cfg['bold']},"
+        f"{cfg['italic']},"
+        f"0,0,100,100,0,0,1,"
+        f"{cfg['outline_size']},"
+        f"0,"
+        f"{cfg['alignment']},"
+        f"80,80,"
+        f"{cfg['margin_v']},"
+        f"1",
         "",
         "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
@@ -18,17 +36,15 @@ def ass_header(width, height):
     ]
 
 
-def ass_word_pop(word, active=False, pop_scale=130):
-    """
-    Renderiza una palabra. Si está activa, aplica scale up (pop).
-
-    Args:
-        word:       Texto de la palabra
-        active:     Si es la palabra activa en este momento
-        pop_scale:  Porcentaje de escala para la palabra activa (default 130 = 130%)
-    """
+def ass_word_pop(word, active=False, cfg=None, pop_scale=130):
     if active:
-        return f"{{\\fscx{pop_scale}\\fscy{pop_scale}}}{word}{{\\fscx100\\fscy100}}"
+        highlight = cfg["highlight_color"] if cfg else "&H00E48200&"
+        primary   = cfg["primary_color"]   if cfg else "&H00FFFFFF&"
+        return (
+            f"{{\\fscx{pop_scale}\\fscy{pop_scale}\\c{highlight}}}"
+            f"{word}"
+            f"{{\\fscx100\\fscy100\\c{primary}}}"
+        )
     return word
 
 
@@ -39,24 +55,16 @@ def format_timestamp_ass(seconds):
     return f"{h}:{m:02d}:{s:05.2f}"
 
 
-def word_pop_style(words, max_words_per_line, width, height, pop_scale=130):
-    """
-    Genera subtítulos estilo Word Pop: la palabra activa hace zoom
-    mientras el resto de la línea permanece en tamaño normal.
-
-    Args:
-        words:              Lista de dicts con keys 'word', 'start', 'end'
-        max_words_per_line: Cantidad de palabras por línea
-        width:              Ancho del video
-        height:             Alto del video
-        pop_scale:          Escala de zoom de la palabra activa (default 130%)
-    """
+def word_pop_style(words, max_words_per_line, width, height):
 
     if max_words_per_line < 2:
         max_words_per_line = 2
 
+    cfg       = get_ass_config("word_pop")
+    pop_scale = cfg["style_params"].get("pop_scale", 130)
+
     ass_lines = []
-    ass_lines.extend(ass_header(width, height))
+    ass_lines.extend(ass_header(width, height, cfg))
 
     i = 0
     while i < len(words):
@@ -76,7 +84,7 @@ def word_pop_style(words, max_words_per_line, width, height, pop_scale=130):
                 end_time = group_end_time
 
             rendered_words = [
-                ass_word_pop(w["word"], active=(j == idx), pop_scale=pop_scale)
+                ass_word_pop(w["word"], active=(j == idx), cfg=cfg, pop_scale=pop_scale)
                 for j, w in enumerate(group)
             ]
 

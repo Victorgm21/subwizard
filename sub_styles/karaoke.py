@@ -1,4 +1,9 @@
-def ass_header(width, height):
+from utils import config_loader
+
+
+
+
+def ass_header(width, height, cfg):
     return [
         "[Script Info]",
         "Title: Karaoke Style Subtitles",
@@ -10,7 +15,22 @@ def ass_header(width, height):
         "",
         "[V4+ Styles]",
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        "Style: Default,Montserrat,50,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,1,0,0,0,100,100,0,0,1,4,0,2,80,80,100,1",
+        f"Style: Default,"
+        f"{cfg['font_family']},"
+        f"{cfg['font_size']},"
+        f"{cfg['primary_color']},"
+        f"{cfg['highlight_color']},"
+        f"{cfg['outline_color']},"
+        f"{cfg['back_color']},"
+        f"{cfg['bold']},"
+        f"{cfg['italic']},"
+        f"0,0,100,100,0,0,1,"
+        f"{cfg['outline_size']},"
+        f"0,"
+        f"{cfg['alignment']},"
+        f"80,80,"
+        f"{cfg['margin_v']},"
+        f"1",
         "",
         "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
@@ -18,10 +38,11 @@ def ass_header(width, height):
     ]
 
 
-def ass_word(word, active=False):
+def ass_word(word, active=False, cfg=None):
     if active:
-        # morado → blanco
-        return f"{{\\c&H00E48200&}}{word}{{\\c&H00FFFFFF&}}"
+        primary   = cfg["primary_color"]   if cfg else "&H00FFFFFF&"
+        highlight = cfg["highlight_color"] if cfg else "&H00E48200&"
+        return f"{{\\c{highlight}}}{word}{{\\c{primary}}}"
     return word
 
 
@@ -37,8 +58,10 @@ def karaoke_style(words, max_words_per_line, width, height):
     if max_words_per_line < 2:
         max_words_per_line = 2
 
+    cfg = config_loader.get_ass_config("karaoke")
+
     ass_lines = []
-    ass_lines.extend(ass_header(width, height))
+    ass_lines.extend(ass_header(width, height, cfg))
 
     i = 0
     while i < len(words):
@@ -58,7 +81,7 @@ def karaoke_style(words, max_words_per_line, width, height):
                 end_time = group_end_time
 
             rendered_words = [
-                ass_word(w["word"], j == idx)
+                ass_word(w["word"], j == idx, cfg)
                 for j, w in enumerate(group)
             ]
 

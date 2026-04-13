@@ -1,0 +1,31 @@
+{
+  "font": {
+    "family": "Montserrat",
+    "size": 80,
+    "bold": true,
+    "italic": false
+  },
+  "colors": {
+    "text": "#FFFFFF",
+    "highlight": "#FF3080",
+    "outline": "#000000",
+    "background": "#000000",
+    "background_opacity": 100
+  },
+  "outline_size": 4,
+  "position": {
+    "alignment": "bottom_center",
+    "offset_y": 50
+  },
+  "styles": {
+    "karaoke": {},
+    "word_pop": {
+      "pop_scale": 130
+    },
+    "zoom_in": {
+      "anim_duration": 150,
+      "start_scale": 50,
+      "accel": 3
+    }
+  }
+}

@@ -1,4 +1,7 @@
-def ass_header(width, height):
+from utils.config_loader import get_ass_config
+
+
+def ass_header(width, height, cfg):
     return [
         "[Script Info]",
         "Title: Zoom In Style Subtitles",
@@ -10,7 +13,22 @@ def ass_header(width, height):
         "",
         "[V4+ Styles]",
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        "Style: Default,Montserrat,50,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,1,0,0,0,100,100,0,0,1,4,0,2,80,80,100,1",
+        f"Style: Default,"
+        f"{cfg['font_family']},"
+        f"{cfg['font_size']},"
+        f"{cfg['primary_color']},"
+        f"{cfg['highlight_color']},"
+        f"{cfg['outline_color']},"
+        f"{cfg['back_color']},"
+        f"{cfg['bold']},"
+        f"{cfg['italic']},"
+        f"0,0,100,100,0,0,1,"
+        f"{cfg['outline_size']},"
+        f"0,"
+        f"{cfg['alignment']},"
+        f"80,80,"
+        f"{cfg['margin_v']},"
+        f"1",
         "",
         "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
@@ -25,26 +43,18 @@ def format_timestamp_ass(seconds):
     return f"{h}:{m:02d}:{s:05.2f}"
 
 
-def zoom_in_style(words, max_words_per_line, width, height, anim_duration=150, start_scale=25, accel=3):
-    """
-    Genera subtítulos donde cada grupo de palabras aparece con un zoom suave
-    de entrada con curva cúbica de salida (empieza rápido, termina lento).
-
-    Args:
-        words:              Lista de dicts con keys 'word', 'start', 'end'
-        max_words_per_line: Cantidad de palabras por línea
-        width:              Ancho del video
-        height:             Alto del video
-        anim_duration:      Duración de la animación de entrada en ms (default 180ms)
-        start_scale:        Escala inicial del zoom en % (default 40%)
-        accel:              Aceleración de la curva: >1 = ease out (default 3)
-    """
+def zoom_in_style(words, max_words_per_line, width, height):
 
     if max_words_per_line < 1:
         max_words_per_line = 1
 
+    cfg           = get_ass_config("zoom_in")
+    anim_duration = cfg["style_params"].get("anim_duration", 90)
+    start_scale   = cfg["style_params"].get("start_scale", 25)
+    accel         = cfg["style_params"].get("accel", 5)
+
     ass_lines = []
-    ass_lines.extend(ass_header(width, height))
+    ass_lines.extend(ass_header(width, height, cfg))
 
     i = 0
     while i < len(words):
@@ -59,8 +69,6 @@ def zoom_in_style(words, max_words_per_line, width, height, anim_duration=150, s
 
         text = " ".join(w["word"] for w in group)
 
-        # Estado inicial: pequeño y transparente
-        # \t() anima hacia tamaño normal y opaco con curva de aceleración
         animated_text = (
             f"{{\\fscx{start_scale}\\fscy{start_scale}\\alpha&HFF&"
             f"\\t(0,{anim_duration},{accel},\\fscx100\\fscy100\\alpha&H00&)}}{text}"

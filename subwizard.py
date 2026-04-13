@@ -21,7 +21,7 @@ from faster_whisper import WhisperModel
 from utils import utils
 from cli_args import setup_argument_parser
 from sub_styles import karaoke, simple, segments_to_json, word_pop, zoom_in
-from utils import render_video
+from utils import render_video, config_loader
 
 
 
@@ -41,6 +41,8 @@ def transcribe_to_srt(
     file_name = "subs",
     language = None,
     ):
+
+    config_loader.load_config()
 
     perf_settings = {
             "efficient":      {"model": "base",   "beam": 3,  "compute": "int8"},
