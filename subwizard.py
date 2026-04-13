@@ -70,7 +70,7 @@ def transcribe_to_srt(
     model = WhisperModel(model_size, device= device, compute_type= compute_type)
 
 
-    if language != None or language == "auto":
+    if language is None or language == "auto":
         segments, _info = model.transcribe(audio_path, beam_size = beam_size, word_timestamps=True)
     else:
         segments, _info = model.transcribe(audio_path, beam_size = beam_size, word_timestamps=True, language=language)
