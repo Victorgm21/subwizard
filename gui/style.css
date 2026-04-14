@@ -11,20 +11,74 @@ body {
   color: var(--text-color);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  padding: 0px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .title {
   color: var(--accent-color);
   font-size: 32px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   font-weight: bold;
 }
+
+/* ======================== */
+/*          TABS            */
+/* ======================== */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid transparent;
+  border-bottom: none;
+  padding: 8px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  transition: color 0.2s, background 0.2s;
+}
+
+.tab-btn:hover {
+  color: white;
+  background: var(--card-bg);
+}
+
+.tab-btn.active {
+  color: white;
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  border-bottom: 1px solid var(--card-bg);
+  margin-bottom: -1px;
+}
+
+.tab-content {
+  display: none;
+  width: 100%;
+  max-width: 500px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ======================== */
+/*        FIELDSETS         */
+/* ======================== */
 
 .section-group {
   border: 1px solid var(--border-color);
@@ -64,13 +118,47 @@ select {
   flex-grow: 1;
 }
 
-button.btn-browse {
-  background: #3e4259;
-  color: white;
+/* ======================== */
+/*      COLOR INPUTS        */
+/* ======================== */
+
+input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 30px;
   border: 1px solid var(--border-color);
-  padding: 5px 15px;
+  border-radius: 4px;
+  background: transparent;
   cursor: pointer;
+  padding: 2px;
+  flex-grow: 0;
 }
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+/* ======================== */
+/*       CHECKBOXES         */
+/* ======================== */
+
+.cfg-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-color);
+  cursor: pointer;
+  flex-grow: 0;
+}
+
+/* ======================== */
+/*          GRID            */
+/* ======================== */
 
 .config-grid {
   display: grid;
@@ -83,10 +171,24 @@ button.btn-browse {
   align-items: center;
   gap: 10px;
 }
+
 .field select,
-.field input {
+.field input[type="number"],
+.field input[type="text"] {
   width: 80px;
   flex-grow: 0;
+}
+
+/* ======================== */
+/*         BUTTONS          */
+/* ======================== */
+
+button.btn-browse {
+  background: #3e4259;
+  color: white;
+  border: 1px solid var(--border-color);
+  padding: 5px 15px;
+  cursor: pointer;
 }
 
 .btn-generate {
@@ -101,34 +203,41 @@ button.btn-browse {
   margin: 20px 0;
 }
 
-.progress-container {
-  width: 100%;
-  max-width: 500px;
-  height: 25px;
-  border: 1px solid var(--border-color);
-  margin-bottom: 10px;
+.btn-generate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.status {
+/* ======================== */
+/*       ACTION AREA        */
+/* ======================== */
+
+.action-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-text {
   color: #4caf50;
   font-size: 14px;
+  margin: 0;
 }
 
-/* */
+/* ======================== */
+/*         SELECTS          */
+/* ======================== */
 
-/* Fondo y texto del desplegable */
 select {
-  background-color: var(--card-bg); /* fondo del select cerrado */
+  background-color: var(--card-bg);
   color: white;
 }
 
-/* Fondo y texto de las opciones */
 select option {
   background-color: var(--card-bg);
   color: white;
 }
 
-/* Cuando una opción está seleccionada o en hover */
 select option:checked,
 select option:hover {
   background-color: var(--accent-color);

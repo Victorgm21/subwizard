@@ -1,20 +1,20 @@
 {
   "font": {
-    "family": "Montserrat",
-    "size": 80,
-    "bold": true,
+    "family": "Luckiest Guy",
+    "size": 50,
+    "bold": false,
     "italic": false
   },
   "colors": {
-    "text": "#FFFFFF",
-    "highlight": "#FF3080",
+    "text": "#ffffff",
+    "highlight": "#a653ea",
     "outline": "#000000",
     "background": "#000000",
     "background_opacity": 100
   },
   "outline_size": 4,
   "position": {
-    "alignment": "bottom_center",
+    "alignment": "middle_center",
     "offset_y": 50
   },
   "styles": {

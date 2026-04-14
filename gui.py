@@ -2,43 +2,90 @@ import webview
 import os
 import sys
 import subprocess
-import sys
+import json
+
+
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+
+DEFAULT_CONFIG = {
+    "font": {
+        "family": "Montserrat",
+        "size": 80,
+        "bold": True,
+        "italic": False
+    },
+    "colors": {
+        "text": "#FFFFFF",
+        "highlight": "#E48200",
+        "outline": "#000000",
+        "background": "#000000",
+        "background_opacity": 100
+    },
+    "outline_size": 4,
+    "position": {
+        "alignment": "bottom_center",
+        "offset_y": 50
+    },
+    "styles": {
+        "karaoke": {},
+        "word_pop": {
+            "pop_scale": 130
+        },
+        "zoom_in": {
+            "anim_duration": 150,
+            "start_scale": 25,
+            "accel": 3
+        }
+    }
+}
 
 
 class Api:
+
     def test_connection(self):
         print("Python recibió la llamada desde HTML")
         return "Conexión OK"
-    
+
     def select_input_file(self):
-       file_types = file_types = ('Video files (*.mp4;*.mov;*.mkv)', 'Audio files (*.mp3;*.aac;*.wav)')
-
-       result = webview.windows[0].create_file_dialog(
-          webview.FileDialog.OPEN,
-          allow_multiple= False,
-          file_types = file_types,
-       )
-
-       if result:
-          return result[0]
-       return None;
-
+        file_types = ('Video files (*.mp4;*.mov;*.mkv)', 'Audio files (*.mp3;*.aac;*.wav)')
+        result = webview.windows[0].create_file_dialog(
+            webview.FileDialog.OPEN,
+            allow_multiple=False,
+            file_types=file_types,
+        )
+        if result:
+            return result[0]
+        return None
 
     def select_output_folder(self):
-       result = webview.windows[0].create_file_dialog(
-          webview.FileDialog.FOLDER)
-       if result:
-          return result[0]
-       return None
+        result = webview.windows[0].create_file_dialog(webview.FileDialog.FOLDER)
+        if result:
+            return result[0]
+        return None
 
+    def get_config(self):
+        if not os.path.exists(CONFIG_PATH):
+            with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+                json.dump(DEFAULT_CONFIG, f, ensure_ascii=False, indent=2)
+            return DEFAULT_CONFIG
+
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    def save_config(self, cfg):
+        try:
+            with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+                json.dump(cfg, f, ensure_ascii=False, indent=2)
+            return "Settings saved successfully"
+        except Exception as e:
+            return f"Error saving config: {str(e)}"
 
     def receive_form_data(self, data):
         if not data["input_path"]:
             return "Error: No input video"
 
         if not data["output_path"]:
-            return "Error: No Folder output"
-        
+            return "Error: No folder output"
 
         # -------------------------
         # Detectar modo ejecución
@@ -56,7 +103,7 @@ class Api:
         else:
             command = [sys.executable, py_path]
 
-        # Construcción del comando 
+        # Construcción del comando
         command.extend([
             data["input_path"],
             "--max-words", str(data["words_per_line"]),
@@ -66,24 +113,19 @@ class Api:
             "--output-type", data["output_format"],
             "--style", data["sub_style"],
         ])
-        # Idioma opcional
+
         if data["language"] and data["language"] != "auto":
             command.extend(["--lang", data["language"]])
 
-        # Debug visual
         printable_cmd = " ".join(
             f'"{c}"' if " " in c else c for c in command
         )
-
         print("\nComando generado:")
         print(printable_cmd)
-
 
         # -------------------------
         # Ejecutar
         # -------------------------
-
-
         try:
             result = subprocess.run(
                 command,
@@ -106,14 +148,13 @@ class Api:
 
 
 if __name__ == "__main__":
-  api = Api()
-  webview.create_window(
-     title="subwizard",
-     url="gui/gui.html",
-     js_api=api,
-     width=600,
-     height=800,
-     resizable= False,
-  )
-
-  webview.start()
+    api = Api()
+    webview.create_window(
+        title="subwizard",
+        url="gui/gui.html",
+        js_api=api,
+        width=600,
+        height=800,
+        resizable=False,
+    )
+    webview.start()
