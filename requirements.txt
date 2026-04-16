@@ -1,4 +1,4 @@
-request
+requests
 faster-whisper
 torch
 pywebview

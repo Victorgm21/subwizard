@@ -8,11 +8,11 @@
   "colors": {
     "text": "#ffffff",
     "highlight": "#a653ea",
-    "outline": "#000000",
+    "outline": "#ff1f1f",
     "background": "#000000",
     "background_opacity": 100
   },
-  "outline_size": 4,
+  "outline_size": 10,
   "position": {
     "alignment": "middle_center",
     "offset_y": 50
