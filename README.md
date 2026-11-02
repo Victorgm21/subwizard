@@ -1,8 +1,16 @@
 # 🎬 SubWizard: Your Magical Subtitle Assistant 🧙‍♂️
 
 <p align="center">
-  <img src="https://i.ibb.co/mpzpvdQ/Screenshot-1.png" alt="SubWizard's graphical user interface" width="600">
+  <img src="assets/screenshot.png" alt="SubWizard - Subtitle Generator" width="800">
 </p>
+
+<details>
+<summary align="center"><b>🎨 View Appearance & Style Settings Screenshot</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshot_appearance.png" alt="SubWizard - Appearance & Style Parameters" width="800">
+</p>
+</details>
 
 <p align="center">
   <a href="https://paypal.me/victorgouveia17">
@@ -15,37 +23,53 @@
   <a href="https://www.python.org/downloads/release/python-380/"><img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+"></a>
 </p>
 
-SubWizard is a powerful and user-friendly tool that automatically generates subtitles for your video and audio files (ONLY WINDOWS). It leverages the impressive speed and accuracy of `faster-whisper` to transcribe spoken content. Whether you need an `.srt` file or want to burn the subtitles directly into your `.mp4` video, SubWizard has you covered.
+**SubWizard** is a modern, user-friendly desktop application for Windows that automatically transcribes, generates, and burns animated subtitles into your video and audio files. Powered by `faster-whisper` and `FFmpeg`, it supports both single-file processing and full-folder batch processing with a sleek macOS-inspired dark interface.
 
 ---
 
 ## ✨ Features
 
-- **Fast & Accurate Transcription:** Powered by `faster-whisper` for efficient and precise speech-to-text conversion.
-- **Multiple Subtitle Styles:**
-  - **Simple:** Classic subtitle style.
-  - **Karaoke:** Highlighting words as they are spoken.
-  - **Word pop:** Words appear with a "pop" animation.
-  - **Zoom in:** Dynamic zoom effect on subtitles.
-- **Flexible Output:** Generate standard `.srt` / `.ass` subtitle files or a new `.mp4` video with the subtitles permanently "burned in."
-- **Intuitive GUI:** A clean and easy-to-use graphical user interface that works on Windows.
-- **Automatic FFmpeg Handling:** SubWizard automatically downloads and manages its own FFmpeg dependency, so you don't need to install it globally.
-- **Performance Profiles:** Choose from different profiles to balance speed and accuracy:
-  - `efficient` (base model)
-  - `normal` (small model)
-  - `detailed` (medium model)
-  - `ultra-detailed` (large model)
-- **Language Detection:** Automatically detects the audio language, or you can specify it manually for better results.
-- **Command-Line Interface (CLI):** A robust CLI is available for advanced users and automation.
+- **Fast & Accurate AI Transcription:** Powered by `faster-whisper` with word-level timestamps, automatic GPU (`CUDA` `float16`) acceleration, and seamless CPU fallback.
+- **Single File & Folder Batch Processing:**
+  - **Single File Mode:** Transcribe individual video or audio files.
+  - **Folder Batch Mode:** Select an entire directory to process all supported media files in a single run (loads the Whisper model only once for the entire batch and lets you define an optional filename suffix such as `_sub`).
+- **Multiple Animated Subtitle Styles:**
+  - **Simple (`.srt`):** Classic, clean subtitle lines.
+  - **Karaoke (`.ass`):** Highlights each word dynamically as it is spoken.
+  - **Word Pop (`.ass`):** Active word pops up in scale and highlight color while spoken.
+  - **Zoom In (`.ass`):** Smooth zoom-in entrance animation for each subtitle line.
+- **Flexible Output Formats:**
+  - **Only Video (`.mp4`):** Burns subtitles directly into the video and automatically removes temporary subtitle files.
+  - **Only Subtitles (`.srt` / `.ass`):** Generates only the subtitle file without re-encoding video.
+  - **Both (Video + Subtitles):** Exports the subtitled `.mp4` video and keeps the `.srt` / `.ass` subtitle file in the destination folder.
+- **Complete Appearance & Animation Studio:**
+  - **System Fonts Detection:** Automatically reads all installed fonts from the Windows Registry (system & user fonts) so you can pick any font installed on your PC.
+  - **Typography & Layout:** Customize font family, font size (`px`), bold, italic, screen alignment (`Bottom center`, `Middle center`, `Top center`), and vertical margin (`px`).
+  - **Colors & Outline:** Customize primary text color, active word highlight color, outline color & thickness, and shadow/background color with adjustable transparency (`0–100%`).
+  - **Animation Parameters:** Fine-tune **Word Pop** scale (`%`) and **Zoom In** duration (`ms`), initial scale (`%`), and acceleration.
+- **Whisper Performance Profiles:**
+  - `Efficient` (`base` model, `beam_size=3`)
+  - `Normal` (`small` model, `beam_size=5`)
+  - `Detailed` (`medium` model, `beam_size=10`)
+  - `Ultra-detailed` (`large` model, `beam_size=20`)
+- **Multi-Language Support:** Automatic spoken language detection (`Auto-detect`) or manual selection (`English`, `Spanish`, `French`, `Deutsch`, `Japanese`, `Korean`).
+- **Automatic FFmpeg & FFprobe Management:** Automatically detects or downloads portable `ffmpeg` and `ffprobe` binaries into `tools/ffmpeg/bin` when needed.
+
+---
+
+## 📂 Supported Formats
+
+- **Video:** `.mp4`, `.mkv`, `.mov`, `.avi`, `.flv`, `.webm`
+- **Audio:** `.mp3`, `.wav`, `.aac`, `.flac`
 
 ---
 
 ## 🛠️ Technologies Used
 
-- **Python:** The core programming language.
-- **Faster-Whisper:** For high-performance transcription.
-- **PyWebView:** For the modern and cross-platform graphical user interface.
-- **FFmpeg:** For audio extraction and subtitle integration.
+- **Python:** Core application and batch pipeline logic.
+- **Faster-Whisper & PyTorch:** High-performance speech-to-text transcription with word-level timestamps.
+- **PyWebView:** Lightweight native desktop window with a macOS-inspired dark UI.
+- **FFmpeg & FFprobe:** Audio extraction, video resolution detection, and hardware-friendly subtitle burning.
 
 ---
 
@@ -53,69 +77,43 @@ SubWizard is a powerful and user-friendly tool that automatically generates subt
 
 ### Prerequisites
 
-- Python 3.8 or higher.
+- **OS:** Windows 10 / 11
+- **Python:** 3.8 or higher (compatible up to Python 3.14)
 
 ### Installation
 
-1.  **Clone this repository:**
-    ```bash
-    git clone https://github.com/Victorgm21/subwizard.git
-    cd subwizard
-    ```
-2.  **Install the required Python packages:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+1. **Clone this repository:**
+   ```bash
+   git clone https://github.com/Victorgm21/subwizard.git
+   cd subwizard
+   ```
+2. **Install the required Python packages:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ---
 
 ## 🖥️ Usage
 
-### Using the Graphical User Interface (GUI)
-
-The easiest way to use SubWizard is with its intuitive GUI. Simply run:
+Launch the application by running:
 ```bash
-python gui.py
-```
-This will open a window where you can:
-
-1.  Browse for your video or audio file.
-2.  Adjust settings like words per line, performance, output format and subtitle style.
-3.  Specify the output file name and destination folder.
-4.  Click "Generate Subtitles" to start the process.
-
-### Using the Command-Line Interface (CLI)
-
-For command-line enthusiasts, you can use the `subwizard.py` script directly.
-
-**Basic Usage:**
-```bash
-python subwizard.py path/to/video.mp4
+python subwizard.py
 ```
 
-**Advanced Example:**
+### 1. Generator Tab
+1. **Source:**
+   - Click **File...** to select a single video or audio file.
+   - Or click **Folder...** to batch-process all video/audio files inside a directory.
+2. **Destination:**
+   - Set the output **File name** (or an optional **Suffix** like `_sub` in Folder mode).
+   - Click **Browse...** to choose the destination folder.
+3. **Transcription & Format:**
+   - Choose your **Subtitle style** (`Simple`, `Karaoke`, `Word Pop`, or `Zoom In`).
+   - Select the **Output format** (`Only Video (.mp4)`, `Only Subtitles (.srt / .ass)`, or `Both`).
+   - Select the **Whisper model** profile, **Spoken language**, and **Words per line**.
+4. Click **Generate Subtitles** to start processing and follow the real-time progress in the bottom status bar.
 
-This command transcribes `video.mp4`, limits each subtitle line to 3 words, uses the `detailed` performance profile, sets the output file name to `my_subs`, saves it as an MP4 with `karaoke` style subtitles, and specifies the language as Spanish.
-
-```bash
-python subwizard.py video.mp4 --max-words 3 --performance detailed --output-name my_subs --output-type mp4 --style karaoke --lang es
-```
-
-**Full List of Arguments:**
-
-| Argument | Description | Default |
-| :--- | :--- | :--- |
-| `video` | Path to the video or audio file | (Required) |
-| `--max-words` | Number of words per line | `3` |
-| `--performance` | Performance profiles: `efficient`, `normal`, `detailed`, `ultra-detailed` | `normal` |
-| `--output-name` | Set the file name for the output | `automatic_subtitles_ready` |
-| `--output-path` | Set the subtitle output path | `None` |
-| `--output-type` | Set file output type: `srt` / `mp4` | `mp4` |
-| `--lang` | Set the original language from the video (e.g., `en`, `es`, `fr`) | `None` (Auto) |
-| `--style` | Choose the style: `simple`, `karaoke`, `word-pop`, `zoom-in` | `simple` |
-| `--subtitle-path` | Burns existing .SRT or .ASS into a video | `None` |
-
-For more info, use the `--help` flag:
-```bash
-python subwizard.py --help
-```
+### 2. Appearance Tab
+- Switch to the **Appearance** tab in the sidebar to customize **Typography**, **Position**, **Colors & Outline**, and **Animation Parameters**.
+- Click **Save Changes** to persist your custom configuration in `config.json`.

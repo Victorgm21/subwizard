@@ -8,13 +8,13 @@
   "colors": {
     "text": "#ffffff",
     "highlight": "#a653ea",
-    "outline": "#ff1f1f",
+    "outline": "#000000",
     "background": "#000000",
     "background_opacity": 100
   },
-  "outline_size": 10,
+  "outline_size": 0,
   "position": {
-    "alignment": "middle_center",
+    "alignment": "bottom_center",
     "offset_y": 50
   },
   "styles": {

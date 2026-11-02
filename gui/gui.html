@@ -3,261 +3,357 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SubWizard - Automatic Subtitler</title>
+    <title>SubWizard</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="main-container">
-      <h1 class="title">SubWizard</h1>
-
-      <!-- TABS -->
-      <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('home')">Home</button>
-        <button class="tab-btn" onclick="switchTab('settings')">
-          Settings
-        </button>
-      </div>
-
+    <div class="app-layout">
       <!-- ======================== -->
-      <!--        TAB HOME          -->
+      <!--      BARRA LATERAL       -->
       <!-- ======================== -->
-      <div id="tab-home" class="tab-content active">
-        <fieldset class="section-group">
-          <legend>Input File</legend>
-          <div class="input-row">
-            <label for="input-path">Video / Audio</label>
-            <input
-              type="text"
-              id="input-path"
-              placeholder="No file selected"
-              readonly
-            />
-            <button
-              type="button"
-              class="btn-browse"
-              onclick="selectInputFile()"
-            >
-              Browse
-            </button>
-          </div>
-        </fieldset>
+      <aside class="sidebar">
+        <div class="app-brand">
+          <span class="brand-name">SubWizard</span>
+          <span class="brand-tag">Subtitle Studio</span>
+        </div>
 
-        <fieldset class="section-group">
-          <legend>Configuration</legend>
-          <div class="config-grid">
-            <div class="field">
-              <label>Words per line</label>
-              <input type="number" value="5" min="1" id="words-per-line" />
-            </div>
-            <div class="field">
-              <label>Performance</label>
-              <select id="select-performance">
-                <option value="efficient">efficient</option>
-                <option value="normal" selected>normal</option>
-                <option value="detailed">detailed</option>
-                <option value="ultra-detailed">ultra-detailed</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Output format</label>
-              <select id="select-output-type">
-                <option value="srt">srt</option>
-                <option value="mp4">mp4</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Language</label>
-              <select id="select-language">
-                <option value="auto">auto</option>
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">Deutsch</option>
-                <option value="jp">Japanese</option>
-                <option value="kr">Korean</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Sub Style</label>
-              <select id="select-sub-style">
-                <option value="simple">Simple</option>
-                <option value="karaoke">Karaoke</option>
-                <option value="word-pop">Word pop</option>
-                <option value="zoom-in">Zoom in</option>
-              </select>
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset class="section-group">
-          <legend>Output File</legend>
-          <div class="output-fields">
-            <div class="input-row">
-              <label>File name</label>
-              <input id="output-filename" type="text" value="subwizard" />
-            </div>
-            <div class="input-row">
-              <label>Destination folder</label>
-              <input
-                type="text"
-                id="output-path"
-                placeholder="Select folder..."
-                readonly
-              />
-              <button type="button" class="btn-browse" onclick="selectFolder()">
-                Browse
-              </button>
-            </div>
-          </div>
-        </fieldset>
-
-        <div class="action-area">
-          <button
-            id="btn-generate"
-            class="btn-generate"
-            onclick="generateSubtitles()"
-          >
-            Generate Subtitles
+        <nav class="nav-list">
+          <button class="tab-btn active" onclick="switchTab('home', this)">
+            Generator
           </button>
-          <p class="status-text" id="status-text">Ready</p>
-        </div>
-      </div>
+          <button class="tab-btn" onclick="switchTab('settings', this)">
+            Appearance
+          </button>
+        </nav>
+      </aside>
 
       <!-- ======================== -->
-      <!--      TAB SETTINGS        -->
+      <!--    CONTENIDO PRINCIPAL   -->
       <!-- ======================== -->
-      <div id="tab-settings" class="tab-content">
-        <fieldset class="section-group">
-          <legend>Font</legend>
-          <div class="config-grid">
-            <div class="field">
-              <label>Family</label>
-              <input type="text" id="cfg-font-family" />
-            </div>
-            <div class="field">
-              <label>Size</label>
-              <input type="number" id="cfg-font-size" min="10" max="200" />
-            </div>
-            <div class="field">
-              <label>Bold</label>
-              <input type="checkbox" id="cfg-font-bold" class="cfg-checkbox" />
-            </div>
-            <div class="field">
-              <label>Italic</label>
-              <input
-                type="checkbox"
-                id="cfg-font-italic"
-                class="cfg-checkbox"
-              />
-            </div>
-          </div>
-        </fieldset>
+      <main class="workspace">
+        <!-- ======================== -->
+        <!--        TAB HOME          -->
+        <!-- ======================== -->
+        <div id="tab-home" class="tab-content active">
+          <header class="view-header">
+            <h2>Subtitle Generator</h2>
+            <p>Transcribe and burn subtitles for a single file or a full folder</p>
+          </header>
 
-        <fieldset class="section-group">
-          <legend>Colors</legend>
-          <div class="config-grid">
-            <div class="field">
-              <label>Text</label>
-              <input type="color" id="cfg-color-text" />
-            </div>
-            <div class="field">
-              <label>Highlight</label>
-              <input type="color" id="cfg-color-highlight" />
-            </div>
-            <div class="field">
-              <label>Outline</label>
-              <input type="color" id="cfg-color-outline" />
-            </div>
-            <div class="field">
-              <label>Background</label>
-              <input type="color" id="cfg-color-background" />
-            </div>
-            <div class="field">
-              <label>BG Opacity %</label>
-              <input type="number" id="cfg-bg-opacity" min="0" max="100" />
-            </div>
-          </div>
-        </fieldset>
+          <!-- FILA SUPERIOR: ENTRADA Y SALIDA -->
+          <div class="groups-grid">
+            <!-- GRUPO: ENTRADA -->
+            <section class="group-section">
+              <h3 class="group-title">Source</h3>
+              <div class="group-card">
+                <div class="form-row">
+                  <label for="input-path">Video / Audio</label>
+                  <div class="row-control wide">
+                    <input
+                      type="text"
+                      id="input-path"
+                      placeholder="No file or folder selected"
+                      readonly
+                    />
+                    <button
+                      type="button"
+                      class="btn-secondary"
+                      onclick="selectInputFile()"
+                    >
+                      File...
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-secondary"
+                      onclick="selectInputFolder()"
+                    >
+                      Folder...
+                    </button>
+                  </div>
+                </div>
+                <div class="form-row info-bar">
+                  <span class="helper-text" id="input-info">
+                    Select a single media file or a folder to process in batch
+                  </span>
+                </div>
+              </div>
+            </section>
 
-        <fieldset class="section-group">
-          <legend>Position</legend>
-          <div class="config-grid">
-            <div class="field">
-              <label>Alignment</label>
-              <select id="cfg-alignment">
-                <option value="bottom_center">Bottom center</option>
-                <option value="middle_center">Middle center</option>
-                <option value="top_center">Top center</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Offset Y (px)</label>
-              <input type="number" id="cfg-offset-y" min="0" />
-            </div>
-          </div>
-        </fieldset>
+            <!-- GRUPO: SALIDA -->
+            <section class="group-section">
+              <h3 class="group-title">Destination</h3>
+              <div class="group-card">
+                <div class="form-row">
+                  <label id="label-output-filename" for="output-filename">
+                    File name
+                  </label>
+                  <input
+                    id="output-filename"
+                    type="text"
+                    value="subwizard"
+                    placeholder="Output file name"
+                  />
+                </div>
 
-        <fieldset class="section-group">
-          <legend>Outline</legend>
-          <div class="config-grid">
-            <div class="field">
-              <label>Outline size</label>
-              <input type="number" id="cfg-outline-size" min="0" max="10" />
-            </div>
+                <div class="form-row">
+                  <label for="output-path">Destination folder</label>
+                  <div class="row-control wide">
+                    <input
+                      type="text"
+                      id="output-path"
+                      placeholder="Choose where to save..."
+                      readonly
+                    />
+                    <button
+                      type="button"
+                      class="btn-secondary"
+                      onclick="selectFolder()"
+                    >
+                      Browse...
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
-        </fieldset>
 
-        <fieldset class="section-group">
-          <legend>Style Params — Word Pop</legend>
-          <div class="config-grid">
-            <div class="field">
-              <label>Pop scale %</label>
-              <input type="number" id="cfg-wordpop-scale" min="100" max="300" />
-            </div>
-          </div>
-        </fieldset>
+          <!-- GRUPO: CONFIGURACIÓN -->
+          <section class="group-section">
+            <h3 class="group-title">Transcription &amp; Format</h3>
+            <div class="group-card">
+              <div class="form-row">
+                <label for="select-sub-style">Subtitle style</label>
+                <select id="select-sub-style">
+                  <option value="simple">Simple (.srt)</option>
+                  <option value="karaoke">Karaoke (.ass)</option>
+                  <option value="word-pop">Word Pop (.ass)</option>
+                  <option value="zoom-in">Zoom In (.ass)</option>
+                </select>
+              </div>
 
-        <fieldset class="section-group">
-          <legend>Style Params — Zoom In</legend>
-          <div class="config-grid">
-            <div class="field">
-              <label>Duration (ms)</label>
-              <input
-                type="number"
-                id="cfg-zoomin-duration"
-                min="10"
-                max="1000"
-              />
-            </div>
-            <div class="field">
-              <label>Start scale %</label>
-              <input
-                type="number"
-                id="cfg-zoomin-startscale"
-                min="1"
-                max="100"
-              />
-            </div>
-            <div class="field">
-              <label>Acceleration</label>
-              <input
-                type="number"
-                id="cfg-zoomin-accel"
-                min="1"
-                max="10"
-                step="0.5"
-              />
-            </div>
-          </div>
-        </fieldset>
+              <div class="form-row">
+                <label for="select-output-type">Output format</label>
+                <select id="select-output-type">
+                  <option value="mp4" selected>Only Video (.mp4)</option>
+                  <option value="subtitles">Only Subtitles (.srt / .ass)</option>
+                  <option value="both">Both (Video + Subtitles)</option>
+                </select>
+              </div>
 
-        <div class="action-area">
-          <button class="btn-generate" onclick="saveConfig()">Save</button>
-          <p class="status-text" id="status-settings">Settings loaded</p>
+              <div class="form-row">
+                <label for="select-performance">Whisper model</label>
+                <select id="select-performance">
+                  <option value="efficient">Efficient (Base)</option>
+                  <option value="normal" selected>Normal (Small)</option>
+                  <option value="detailed">Detailed (Medium)</option>
+                  <option value="ultra-detailed">Ultra-detailed (Large)</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="select-language">Spoken language</label>
+                <select id="select-language">
+                  <option value="auto">Auto-detect</option>
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">Deutsch</option>
+                  <option value="ja">Japanese</option>
+                  <option value="ko">Korean</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="words-per-line">Words per line</label>
+                <input type="number" value="5" min="1" id="words-per-line" />
+              </div>
+            </div>
+          </section>
+
+          <!-- BARRA INFERIOR DE ACCIÓN -->
+          <footer class="bottom-bar">
+            <p class="status-text" id="status-text">Ready</p>
+            <button
+              id="btn-generate"
+              class="btn-primary"
+              onclick="generateSubtitles()"
+            >
+              Generate Subtitles
+            </button>
+          </footer>
         </div>
-      </div>
+
+        <!-- ======================== -->
+        <!--      TAB SETTINGS        -->
+        <!-- ======================== -->
+        <div id="tab-settings" class="tab-content">
+          <header class="view-header">
+            <h2>Appearance &amp; Style Parameters</h2>
+            <p>Customize typography, colors, alignment, and animation behavior</p>
+          </header>
+
+          <div class="groups-grid">
+            <!-- COLUMNA IZQUIERDA -->
+            <div>
+              <!-- GRUPO: TIPOGRAFÍA -->
+              <section class="group-section">
+                <h3 class="group-title">Typography</h3>
+                <div class="group-card">
+                  <div class="form-row">
+                    <label for="cfg-font-family">Font family</label>
+                    <select id="cfg-font-family"></select>
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-font-size">Font size (px)</label>
+                    <input type="number" id="cfg-font-size" min="10" max="200" />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-font-bold">Bold</label>
+                    <input
+                      type="checkbox"
+                      id="cfg-font-bold"
+                      class="cfg-checkbox"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-font-italic">Italic</label>
+                    <input
+                      type="checkbox"
+                      id="cfg-font-italic"
+                      class="cfg-checkbox"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <!-- GRUPO: POSICIÓN -->
+              <section class="group-section">
+                <h3 class="group-title">Position</h3>
+                <div class="group-card">
+                  <div class="form-row">
+                    <label for="cfg-alignment">Screen alignment</label>
+                    <select id="cfg-alignment">
+                      <option value="bottom_center">Bottom center</option>
+                      <option value="middle_center">Middle center</option>
+                      <option value="top_center">Top center</option>
+                    </select>
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-offset-y">Vertical margin (px)</label>
+                    <input type="number" id="cfg-offset-y" min="0" />
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div>
+              <!-- GRUPO: COLORES Y BORDE -->
+              <section class="group-section">
+                <h3 class="group-title">Colors &amp; Outline</h3>
+                <div class="group-card">
+                  <div class="form-row">
+                    <label for="cfg-color-text">Primary text</label>
+                    <input type="color" id="cfg-color-text" />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-color-highlight">
+                      Active word highlight
+                    </label>
+                    <input type="color" id="cfg-color-highlight" />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-color-outline">Outline color</label>
+                    <input type="color" id="cfg-color-outline" />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-outline-size">Outline thickness</label>
+                    <input
+                      type="number"
+                      id="cfg-outline-size"
+                      min="0"
+                      max="10"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-color-background">Shadow / Background</label>
+                    <input type="color" id="cfg-color-background" />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-bg-opacity">
+                      Background transparency (%)
+                    </label>
+                    <input
+                      type="number"
+                      id="cfg-bg-opacity"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <!-- GRUPO: ANIMACIONES -->
+              <section class="group-section">
+                <h3 class="group-title">Animation Parameters</h3>
+                <div class="group-card">
+                  <div class="form-row">
+                    <label for="cfg-wordpop-scale">Word Pop — Scale (%)</label>
+                    <input
+                      type="number"
+                      id="cfg-wordpop-scale"
+                      min="100"
+                      max="300"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-zoomin-duration">
+                      Zoom In — Duration (ms)
+                    </label>
+                    <input
+                      type="number"
+                      id="cfg-zoomin-duration"
+                      min="10"
+                      max="1000"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-zoomin-startscale">
+                      Zoom In — Initial scale (%)
+                    </label>
+                    <input
+                      type="number"
+                      id="cfg-zoomin-startscale"
+                      min="1"
+                      max="100"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-zoomin-accel">Zoom In — Acceleration</label>
+                    <input
+                      type="number"
+                      id="cfg-zoomin-accel"
+                      min="1"
+                      max="10"
+                      step="0.5"
+                    />
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- BARRA INFERIOR DE ACCIÓN -->
+          <footer class="bottom-bar">
+            <p class="status-text" id="status-settings">Settings loaded</p>
+            <button class="btn-primary" onclick="saveConfig()">
+              Save Changes
+            </button>
+          </footer>
+        </div>
+      </main>
     </div>
+
     <script src="script.js"></script>
   </body>
 </html>
-```
