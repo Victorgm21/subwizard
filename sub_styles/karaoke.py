@@ -4,6 +4,7 @@ from utils import config_loader
 
 
 def ass_header(width, height, cfg):
+    shadow = 2 if cfg.get("outline_size", 0) > 0 else 0
     return [
         "[Script Info]",
         "Title: Karaoke Style Subtitles",
@@ -26,7 +27,7 @@ def ass_header(width, height, cfg):
         f"{cfg['italic']},"
         f"0,0,100,100,0,0,1,"
         f"{cfg['outline_size']},"
-        f"0,"
+        f"{shadow},"
         f"{cfg['alignment']},"
         f"80,80,"
         f"{cfg['margin_v']},"

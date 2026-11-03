@@ -1,7 +1,9 @@
 # Standard library
 import os
+import re
 import json
 import warnings
+import subprocess
 
 # Ignore pkg_resources deprecation warning from dependencies
 warnings.filterwarnings(
@@ -87,32 +89,59 @@ def transcribe_to_subtitles(
     language=None,
     video_width=1920,
     video_height=1080,
+    vad_filter=True,
 ):
     """
     Transcribe un archivo de audio usando el modelo ya cargado y genera
     el archivo de subtítulos (.srt o .ass) según el estilo elegido.
     """
-    config_loader.load_config()
+    cfg = config_loader.load_config()
+    font_cfg = cfg.get("font", {})
+    use_uppercase = bool(font_cfg.get("uppercase", False))
+    remove_punct = bool(font_cfg.get("remove_punctuation", False))
+    banned_set = {
+        str(bw).strip().lower()
+        for bw in cfg.get("banned_words", [])
+        if str(bw).strip()
+    }
 
     print(f"Generating transcription for: {os.path.basename(audio_path)}")
 
-    if language is None or language == "auto":
-        segments, _info = model.transcribe(
-            audio_path,
-            beam_size=beam_size,
-            word_timestamps=True
-        )
-    else:
-        segments, _info = model.transcribe(
-            audio_path,
-            beam_size=beam_size,
-            word_timestamps=True,
-            language=language
-        )
+    transcribe_kwargs = {
+        "beam_size": beam_size,
+        "word_timestamps": True,
+        "vad_filter": bool(vad_filter),
+    }
+    if language and language != "auto":
+        transcribe_kwargs["language"] = language
+
+    segments, _info = model.transcribe(audio_path, **transcribe_kwargs)
 
     segments = list(segments)
     word_data = segments_to_json.segments_to_json(segments, output_path, save_to_disk=False)
     words = word_data["words"]
+
+    # Aplicar censura de palabras baneadas y formato de texto (puntuación / mayúsculas)
+    censored_intervals = []
+    if banned_set or remove_punct or use_uppercase:
+        formatted_words = []
+        for w in words:
+            text = w["word"].strip()
+            clean_word = re.sub(r"^[^\w]+|[^\w]+$", "", text, flags=re.UNICODE).lower()
+            if banned_set and clean_word in banned_set:
+                text = re.sub(r"\w", "*", text, flags=re.UNICODE)
+                censored_intervals.append((w["start"], w["end"]))
+            if remove_punct:
+                text = re.sub(r"[.,!?;:¡¿\"“”«»()\[\]{}…]+", "", text).strip()
+            if use_uppercase:
+                text = text.upper()
+            if text:
+                formatted_words.append({
+                    "word": text,
+                    "start": w["start"],
+                    "end": w["end"],
+                })
+        words = formatted_words
 
     # Generar líneas según el estilo seleccionado
     if style == "karaoke":
@@ -132,7 +161,7 @@ def transcribe_to_subtitles(
     subtitles_path = utils.create_srt_file(output_path, srt_lines, file_name, extension)
     print("Subtitles saved at:", subtitles_path)
 
-    return subtitles_path
+    return subtitles_path, censored_intervals
 
 
 def process_single_file(
@@ -145,6 +174,7 @@ def process_single_file(
     style,
     output_format,
     language,
+    vad_filter=True,
 ):
     """
     Procesa un único archivo de video o audio:
@@ -156,7 +186,7 @@ def process_single_file(
         temp_audio_path, video_width, video_height = utils.extract_audio_from_video(file_path)
 
         try:
-            sub_file_path = transcribe_to_subtitles(
+            sub_file_path, censored_intervals = transcribe_to_subtitles(
                 model=model,
                 beam_size=beam_size,
                 audio_path=temp_audio_path,
@@ -167,11 +197,25 @@ def process_single_file(
                 language=language,
                 video_width=video_width,
                 video_height=video_height,
+                vad_filter=vad_filter,
             )
 
             # Si el usuario eligió "mp4" (solo video) o "both" (video + subtítulos)
             if output_format in ("mp4", "both"):
-                render_video.render_video(file_path, output_name, sub_file_path, output_folder)
+                cfg = config_loader.load_config()
+                audio_censor_cfg = cfg.get("banned_audio", {})
+                beep_enabled = bool(audio_censor_cfg.get("enabled", True))
+                beep_volume = float(audio_censor_cfg.get("volume", 35))
+
+                render_video.render_video(
+                    file_path,
+                    output_name,
+                    sub_file_path,
+                    output_folder,
+                    censored_intervals=censored_intervals,
+                    beep_enabled=beep_enabled,
+                    beep_volume=beep_volume,
+                )
 
                 # Si solo quería el video .mp4, borramos el archivo .srt/.ass intermedio
                 if output_format == "mp4" and os.path.exists(sub_file_path):
@@ -192,6 +236,7 @@ def process_single_file(
             language=language,
             video_width=1920,
             video_height=1080,
+            vad_filter=vad_filter,
         )
     else:
         raise ValueError(f"Unsupported file format: {file_path}")
@@ -202,6 +247,13 @@ def process_single_file(
 # =====================================================================
 
 class Api:
+
+    def __init__(self):
+        self._preview_window = None
+        self._preview_input_path = ""
+        self._preview_cfg = None
+        self._preview_style = "simple"
+        self._preview_words_per_line = 5
 
     def update_status(self, message, color="#a5a9d4"):
         """
@@ -234,6 +286,7 @@ class Api:
             return {
                 "mode": "file",
                 "path": selected_file,
+                "folder": os.path.dirname(selected_file),
                 "default_name": base_name,
             }
         return None
@@ -246,6 +299,7 @@ class Api:
             return {
                 "mode": "folder",
                 "path": folder_path,
+                "folder": folder_path,
                 "count": len(media_files),
             }
         return None
@@ -255,6 +309,222 @@ class Api:
         if result:
             return result[0]
         return None
+
+    def get_installed_models(self):
+        """
+        Devuelve la lista de modelos de Whisper guardados en la caché de Hugging Face.
+        """
+        hub_dir = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
+        if not os.path.isdir(hub_dir):
+            return []
+
+        model_friendly_names = {
+            "models--systran--faster-whisper-tiny": "Tiny (Very fast)",
+            "models--systran--faster-whisper-tiny.en": "Tiny English",
+            "models--systran--faster-whisper-base": "Base (Efficient)",
+            "models--systran--faster-whisper-base.en": "Base English",
+            "models--systran--faster-whisper-small": "Small (Normal)",
+            "models--systran--faster-whisper-small.en": "Small English",
+            "models--systran--faster-whisper-medium": "Medium (Detailed)",
+            "models--systran--faster-whisper-medium.en": "Medium English",
+            "models--systran--faster-whisper-large-v1": "Large v1 (Ultra-detailed)",
+            "models--systran--faster-whisper-large-v2": "Large v2 (Ultra-detailed)",
+            "models--systran--faster-whisper-large-v3": "Large v3 (Ultra-detailed)",
+            "models--systran--faster-whisper-large-v3-turbo": "Large v3 Turbo",
+        }
+
+        models = []
+        try:
+            for item in sorted(os.listdir(hub_dir)):
+                if "whisper" in item.lower():
+                    full_path = os.path.join(hub_dir, item)
+                    if os.path.isdir(full_path):
+                        total_bytes = 0
+                        for root, _, files in os.walk(full_path):
+                            for f in files:
+                                fp = os.path.join(root, f)
+                                if os.path.isfile(fp):
+                                    total_bytes += os.path.getsize(fp)
+                        size_mb = total_bytes / (1024 * 1024)
+                        size_str = (
+                            f"{size_mb / 1024:.2f} GB"
+                            if size_mb >= 1000
+                            else f"{size_mb:.1f} MB"
+                        )
+                        friendly = model_friendly_names.get(
+                            item.lower(),
+                            item.replace("models--Systran--", "").replace("models--", ""),
+                        )
+                        models.append({
+                            "id": item,
+                            "name": friendly,
+                            "folder": item,
+                            "size_bytes": total_bytes,
+                            "size_str": size_str,
+                            "path": full_path,
+                        })
+        except Exception as e:
+            print("Error listing whisper models:", e)
+        return models
+
+    def delete_installed_model(self, model_id):
+        """
+        Elimina la carpeta de un modelo de Whisper para liberar espacio en disco.
+        """
+        hub_dir = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
+        target_dir = os.path.abspath(os.path.join(hub_dir, model_id))
+        if not target_dir.startswith(os.path.abspath(hub_dir)):
+            return {"ok": False, "message": "Invalid model directory path."}
+        if not os.path.isdir(target_dir):
+            return {"ok": False, "message": "Model directory not found."}
+        try:
+            shutil.rmtree(target_dir, ignore_errors=False)
+            return {"ok": True, "message": "Model deleted successfully!"}
+        except Exception as e:
+            return {"ok": False, "message": f"Could not delete model: {str(e)}"}
+
+    def open_models_cache_folder(self):
+        hub_dir = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
+        os.makedirs(hub_dir, exist_ok=True)
+        try:
+            if os.name == "nt":
+                os.startfile(hub_dir)
+            else:
+                subprocess.Popen(["xdg-open", hub_dir])
+            return {"ok": True}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def open_output_folder(self, folder_path):
+        folder_path = (folder_path or "").strip()
+        if not folder_path or not os.path.isdir(folder_path):
+            return {"ok": False, "message": "Destination folder does not exist yet."}
+        try:
+            if os.name == "nt":
+                os.startfile(folder_path)
+            else:
+                subprocess.Popen(["xdg-open", folder_path])
+            return {"ok": True}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def get_preview_frame(self, input_path):
+        return utils.extract_random_frame((input_path or "").strip())
+
+    def get_initial_preview_data(self):
+        cfg = self._preview_cfg or config_loader.load_config()
+        frame = utils.extract_random_frame(self._preview_input_path)
+        return {
+            "cfg": cfg,
+            "input_path": self._preview_input_path,
+            "sub_style": self._preview_style,
+            "words_per_line": self._preview_words_per_line,
+            "frame": frame,
+        }
+
+    def get_live_preview_state(self):
+        return {
+            "cfg": self._preview_cfg or config_loader.load_config(),
+            "input_path": self._preview_input_path,
+            "sub_style": self._preview_style,
+            "words_per_line": self._preview_words_per_line,
+        }
+
+    def set_preview_style(self, style):
+        self._preview_style = style or "simple"
+        try:
+            if webview.windows:
+                safe_style = json.dumps(self._preview_style)
+                webview.windows[0].evaluate_js(
+                    f"document.getElementById('select-sub-style').value = {safe_style};"
+                )
+        except Exception:
+            pass
+        return {"ok": True}
+
+    def open_preview_window(self, state=None):
+        state = state or {}
+        self._preview_input_path = (state.get("input_path") or "").strip()
+        if state.get("sub_style"):
+            self._preview_style = state["sub_style"]
+        if state.get("words_per_line"):
+            try:
+                self._preview_words_per_line = max(1, int(state["words_per_line"]))
+            except ValueError:
+                pass
+        if state.get("cfg"):
+            self._preview_cfg = state["cfg"]
+        elif not self._preview_cfg:
+            self._preview_cfg = config_loader.load_config()
+
+        if self._preview_window and self._preview_window in webview.windows:
+            try:
+                frame = utils.extract_random_frame(self._preview_input_path)
+                payload = json.dumps({
+                    "cfg": self._preview_cfg,
+                    "input_path": self._preview_input_path,
+                    "sub_style": self._preview_style,
+                    "words_per_line": self._preview_words_per_line,
+                })
+                frame_json = json.dumps(frame)
+                self._preview_window.evaluate_js(
+                    f"window.receivePreviewUpdate && window.receivePreviewUpdate({payload}, {frame_json})"
+                )
+                return {"ok": True}
+            except Exception:
+                self._preview_window = None
+
+        preview_url = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "gui", "preview.html"
+        )
+        self._preview_window = webview.create_window(
+            title="SubWizard — Live Preview",
+            url=preview_url,
+            js_api=self,
+            width=960,
+            height=640,
+            min_size=(680, 460),
+            resizable=True,
+            background_color="#141416",
+        )
+        return {"ok": True}
+
+    def sync_preview_state(self, state=None):
+        state = state or {}
+        new_input = (state.get("input_path") or "").strip()
+        input_changed = new_input != self._preview_input_path
+        self._preview_input_path = new_input
+        if state.get("sub_style"):
+            self._preview_style = state["sub_style"]
+        if state.get("words_per_line"):
+            try:
+                self._preview_words_per_line = max(1, int(state["words_per_line"]))
+            except ValueError:
+                pass
+        if state.get("cfg"):
+            self._preview_cfg = state["cfg"]
+
+        if self._preview_window and self._preview_window in webview.windows:
+            try:
+                payload = json.dumps({
+                    "cfg": self._preview_cfg,
+                    "input_path": self._preview_input_path,
+                    "sub_style": self._preview_style,
+                    "words_per_line": self._preview_words_per_line,
+                })
+                if input_changed:
+                    frame = utils.extract_random_frame(self._preview_input_path)
+                    frame_json = json.dumps(frame)
+                    self._preview_window.evaluate_js(
+                        f"window.receivePreviewUpdate && window.receivePreviewUpdate({payload}, {frame_json})"
+                    )
+                else:
+                    self._preview_window.evaluate_js(
+                        f"window.receivePreviewUpdate && window.receivePreviewUpdate({payload})"
+                    )
+            except Exception:
+                pass
+        return {"ok": True}
 
     def get_config(self):
         return config_loader.load_config()
@@ -293,6 +563,7 @@ class Api:
         output_format = data.get("output_format", "mp4").lower()
         language = data.get("language", "auto")
         style = data.get("sub_style", "simple")
+        vad_filter = bool(data.get("vad_filter", True))
 
         # Determinar lista de archivos a procesar (1 archivo o carpeta entera)
         is_folder_mode = os.path.isdir(input_path)
@@ -347,6 +618,7 @@ class Api:
                     style=style,
                     output_format=output_format,
                     language=language,
+                    vad_filter=vad_filter,
                 )
 
             if total_files == 1:
@@ -364,12 +636,12 @@ class Api:
 if __name__ == "__main__":
     api = Api()
     webview.create_window(
-        title="SubWizard",
+        title="SubWizard — Videos Powered by AI",
         url="gui/gui.html",
         js_api=api,
-        width=1120,
-        height=820,
-        min_size=(920, 680),
+        width=1260,
+        height=840,
+        min_size=(960, 680),
         resizable=True,
     )
     webview.start()

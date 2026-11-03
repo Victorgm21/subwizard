@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SubWizard — Live Preview</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background-color: #141416;
+        overflow: hidden;
+      }
+
+      .preview-win-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 20px;
+        background-color: var(--sidebar-bg);
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .preview-win-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .preview-win-title h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+      }
+
+      .preview-win-meta {
+        font-size: 12px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .preview-win-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .preview-win-controls select {
+        width: 150px;
+      }
+
+      .preview-win-body {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      .preview-win-stage {
+        position: relative;
+        max-width: 100%;
+        max-height: 100%;
+        height: 100%;
+        aspect-ratio: 16 / 9;
+        background: radial-gradient(circle at 50% 35%, #2c2c34 0%, #16161a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      }
+
+      .preview-word {
+        display: inline-block;
+        margin: 0 0.14em;
+        transform-origin: center bottom;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="preview-win-header">
+      <div class="preview-win-title">
+        <h3 id="preview-title">Subtitle Live Preview</h3>
+        <span id="preview-meta" class="preview-win-meta">
+          (1920×1080 default canvas)
+        </span>
+      </div>
+      <div class="preview-win-controls">
+        <select
+          id="preview-style-select"
+          onchange="onPreviewStyleChange(this.value)"
+        >
+          <option value="simple">Simple (.srt)</option>
+          <option value="karaoke">Karaoke (.ass)</option>
+          <option value="word-pop">Word Pop (.ass)</option>
+          <option value="zoom-in">Zoom In (.ass)</option>
+        </select>
+        <button
+          type="button"
+          id="btn-random-frame"
+          class="btn-secondary"
+          onclick="reloadRandomFrame()"
+        >
+          Random Video Frame
+        </button>
+      </div>
+    </header>
+
+    <main class="preview-win-body">
+      <div id="preview-stage" class="preview-win-stage">
+        <img id="preview-img" class="preview-img" alt="" />
+        <div id="preview-sub-wrapper" class="preview-sub-wrapper">
+          <span id="preview-sub-text" class="preview-sub-text"></span>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      let currentCfg = null;
+      let currentInputPath = "";
+      let currentStyle = "simple";
+      let currentWordsPerLine = 5;
+      let videoWidth = 1920;
+      let videoHeight = 1080;
+
+      let activeWordIdx = 0;
+      let animTimer = null;
+      let lastStateSignature = "";
+
+      function hexToRgba(hex, transparencyPercent) {
+        const clean = (hex || "#000000").replace("#", "");
+        const r = parseInt(clean.substring(0, 2), 16) || 0;
+        const g = parseInt(clean.substring(2, 4), 16) || 0;
+        const b = parseInt(clean.substring(4, 6), 16) || 0;
+        const alpha = Math.max(0, Math.min(1, 1 - transparencyPercent / 100));
+        return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(2)})`;
+      }
+
+      function getProcessedSampleWords() {
+        const isSpanish = currentCfg && currentCfg.app_language === "es";
+        const basePool = isSpanish
+          ? [
+              "¡Bienvenido",
+              "a",
+              "SubWizard,",
+              "crea",
+              "subtítulos",
+              "mágicos",
+              "en",
+              "segundos!",
+              "Cada",
+              "palabra",
+              "destaca",
+              "increíble.",
+            ]
+          : [
+              "Welcome",
+              "to",
+              "SubWizard,",
+              "create",
+              "magic",
+              "subtitles",
+              "in",
+              "seconds!",
+              "Every",
+              "word",
+              "looks",
+              "amazing.",
+            ];
+
+        const font = (currentCfg && currentCfg.font) || {};
+        const isUppercase = !!font.uppercase;
+        const noPunct = !!font.remove_punctuation;
+        const bannedList = Array.isArray(currentCfg && currentCfg.banned_words)
+          ? currentCfg.banned_words.map((w) => String(w).trim().toLowerCase())
+          : [];
+
+        const count = Math.max(
+          1,
+          Math.min(basePool.length, parseInt(currentWordsPerLine) || 5)
+        );
+        let words = basePool.slice(0, count);
+
+        return words.map((rawWord) => {
+          let w = rawWord;
+          const clean = w
+            .replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "")
+            .toLowerCase();
+          if (bannedList.includes(clean)) {
+            w = w.replace(/[\p{L}\p{N}]/gu, "*");
+          }
+          if (noPunct) {
+            w = w.replace(/[.,!?;:¡¿"“”«»()\[\]{}…]+/g, "");
+          }
+          if (isUppercase) {
+            w = w.toUpperCase();
+          }
+          return w;
+        });
+      }
+
+      function applyTypographyAndPosition() {
+        if (!currentCfg) return;
+
+        const stageEl = document.getElementById("preview-stage");
+        const wrapperEl = document.getElementById("preview-sub-wrapper");
+        const textEl = document.getElementById("preview-sub-text");
+        if (!stageEl || !wrapperEl || !textEl) return;
+
+        const isSpanish = currentCfg.app_language === "es";
+        document.getElementById("preview-title").innerText = isSpanish
+          ? "Vista Previa en Vivo"
+          : "Subtitle Live Preview";
+        document.getElementById("btn-random-frame").innerText = isSpanish
+          ? "Fotograma Aleatorio"
+          : "Random Video Frame";
+
+        const styleSelect = document.getElementById("preview-style-select");
+        if (styleSelect && styleSelect.value !== currentStyle) {
+          styleSelect.value = currentStyle;
+        }
+
+        const stageHeight = stageEl.clientHeight || 480;
+        const scale = stageHeight / (videoHeight || 1080);
+
+        const font = currentCfg.font || {};
+        const colors = currentCfg.colors || {};
+        const pos = currentCfg.position || {};
+
+        const fontFamily = font.family || "Tahoma";
+        const fontSize = parseFloat(font.size) || 68;
+        const isBold = !!font.bold;
+        const isItalic = !!font.italic;
+
+        const alignment = pos.alignment || "bottom_center";
+        const offsetY = parseFloat(pos.offset_y) || 110;
+
+        const textColor = colors.text || "#ffffff";
+        const outlineColor = colors.outline || "#000000";
+        const outlineSize = parseFloat(currentCfg.outline_size) || 0;
+        const bgColor = colors.background || "#000000";
+        const bgTransparency = parseFloat(colors.background_opacity ?? 100);
+
+        const scaledFontPx = Math.max(10, fontSize * scale);
+        textEl.style.fontFamily = `"${fontFamily}", sans-serif`;
+        textEl.style.fontSize = `${scaledFontPx.toFixed(1)}px`;
+        textEl.style.fontWeight = isBold ? "700" : "400";
+        textEl.style.fontStyle = isItalic ? "italic" : "normal";
+        textEl.style.color = textColor;
+        textEl.style.backgroundColor = hexToRgba(bgColor, bgTransparency);
+
+        const scaledOutline = Math.max(0, outlineSize * scale);
+        if (scaledOutline > 0.2) {
+          const o = Math.max(1, Math.round(scaledOutline));
+          const shadowBlur = Math.max(2, Math.round(scaledOutline * 1.4));
+          textEl.style.webkitTextStroke = `${(scaledOutline * 0.85).toFixed(1)}px ${outlineColor}`;
+          textEl.style.textShadow = `${o}px ${o}px 0 ${outlineColor}, -${o}px -${o}px 0 ${outlineColor}, ${o}px -${o}px 0 ${outlineColor}, -${o}px ${o}px 0 ${outlineColor}, 0 ${o + 1}px ${shadowBlur}px rgba(0,0,0,0.65)`;
+        } else {
+          textEl.style.webkitTextStroke = "0px transparent";
+          textEl.style.textShadow = "none";
+        }
+
+        const scaledOffsetPx = Math.max(0, offsetY * scale);
+        wrapperEl.style.top = "auto";
+        wrapperEl.style.bottom = "auto";
+        wrapperEl.style.transform = "none";
+
+        if (alignment === "top_center") {
+          wrapperEl.style.top = `${scaledOffsetPx.toFixed(1)}px`;
+        } else if (alignment === "middle_center") {
+          wrapperEl.style.top = "50%";
+          wrapperEl.style.transform = "translateY(-50%)";
+        } else {
+          wrapperEl.style.bottom = `${scaledOffsetPx.toFixed(1)}px`;
+        }
+      }
+
+      function renderActiveStep() {
+        if (!currentCfg) return;
+        const textEl = document.getElementById("preview-sub-text");
+        if (!textEl) return;
+
+        const words = getProcessedSampleWords();
+        const colors = currentCfg.colors || {};
+        const textColor = colors.text || "#ffffff";
+        const highlightColor = colors.highlight || "#a855f7";
+        const stylesCfg = currentCfg.styles || {};
+        const popScale =
+          (stylesCfg.word_pop && parseFloat(stylesCfg.word_pop.pop_scale)) ||
+          122;
+
+        if (currentStyle === "simple") {
+          textEl.style.transition = "none";
+          textEl.style.transform = "scale(1)";
+          textEl.style.opacity = "1";
+          textEl.innerHTML = words
+            .map((w) => `<span class="preview-word">${w}</span>`)
+            .join(" ");
+        } else if (currentStyle === "karaoke") {
+          textEl.style.transition = "none";
+          textEl.style.transform = "scale(1)";
+          textEl.style.opacity = "1";
+          const idx = activeWordIdx % words.length;
+          textEl.innerHTML = words
+            .map((w, i) =>
+              i === idx
+                ? `<span class="preview-word" style="color: ${highlightColor};">${w}</span>`
+                : `<span class="preview-word" style="color: ${textColor};">${w}</span>`
+            )
+            .join(" ");
+        } else if (currentStyle === "word-pop") {
+          textEl.style.transition = "none";
+          textEl.style.transform = "scale(1)";
+          textEl.style.opacity = "1";
+          const idx = activeWordIdx % words.length;
+          textEl.innerHTML = words
+            .map((w, i) =>
+              i === idx
+                ? `<span class="preview-word" data-pop="1" style="color: ${highlightColor}; transform: scale(1);">${w}</span>`
+                : `<span class="preview-word" style="color: ${textColor}; transform: scale(1);">${w}</span>`
+            )
+            .join(" ");
+
+          requestAnimationFrame(() => {
+            const activeSpan = textEl.querySelector('[data-pop="1"]');
+            if (activeSpan) {
+              activeSpan.style.transition =
+                "transform 65ms cubic-bezier(0.16, 1, 0.3, 1)";
+              activeSpan.style.transform = `scale(${(popScale / 100).toFixed(2)})`;
+            }
+          });
+        } else if (currentStyle === "zoom-in") {
+          const zoomCfg = stylesCfg.zoom_in || {};
+          const duration = Math.max(
+            20,
+            parseFloat(zoomCfg.anim_duration) || 120
+          );
+          const startScale = Math.max(
+            1,
+            Math.min(100, parseFloat(zoomCfg.start_scale) || 70)
+          );
+          const accel = parseFloat(zoomCfg.accel) || 0.5;
+
+          let easing = "cubic-bezier(0.16, 1, 0.3, 1)"; // ease-out (accel < 1)
+          if (Math.abs(accel - 1.0) < 0.15) {
+            easing = "linear";
+          } else if (accel > 1.0) {
+            easing = "cubic-bezier(0.7, 0, 0.84, 0)"; // ease-in (accel > 1)
+          }
+
+          textEl.innerHTML = words
+            .map((w) => `<span class="preview-word">${w}</span>`)
+            .join(" ");
+
+          textEl.style.transition = "none";
+          textEl.style.transform = `scale(${(startScale / 100).toFixed(2)})`;
+          textEl.style.opacity = "0.78";
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              textEl.style.transition = `transform ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
+              textEl.style.transform = "scale(1)";
+              textEl.style.opacity = "1";
+            });
+          });
+        }
+      }
+
+      function restartStyleAnimationLoop() {
+        if (animTimer) {
+          clearInterval(animTimer);
+          animTimer = null;
+        }
+        activeWordIdx = 0;
+        applyTypographyAndPosition();
+        renderActiveStep();
+
+        if (currentStyle === "karaoke" || currentStyle === "word-pop") {
+          animTimer = setInterval(() => {
+            activeWordIdx++;
+            renderActiveStep();
+          }, 450);
+        } else if (currentStyle === "zoom-in") {
+          animTimer = setInterval(() => {
+            renderActiveStep();
+          }, 1350);
+        }
+      }
+
+      async function onPreviewStyleChange(newStyle) {
+        currentStyle = newStyle;
+        restartStyleAnimationLoop();
+        if (window.pywebview && window.pywebview.api) {
+          await window.pywebview.api.set_preview_style(newStyle);
+        }
+      }
+
+      function applyFrameData(frame) {
+        const metaEl = document.getElementById("preview-meta");
+        const imgEl = document.getElementById("preview-img");
+        const stageEl = document.getElementById("preview-stage");
+
+        if (frame && frame.ok && frame.data_url) {
+          videoWidth = frame.width || 1920;
+          videoHeight = frame.height || 1080;
+          stageEl.style.aspectRatio = `${videoWidth} / ${videoHeight}`;
+          imgEl.src = frame.data_url;
+          imgEl.style.display = "block";
+          metaEl.innerText = `${frame.video_name} (${videoWidth}×${videoHeight})`;
+        } else {
+          videoWidth = 1920;
+          videoHeight = 1080;
+          stageEl.style.aspectRatio = "16 / 9";
+          imgEl.style.display = "none";
+          const isSpanish = currentCfg && currentCfg.app_language === "es";
+          metaEl.innerText = isSpanish
+            ? "Lienzo 1920×1080 (elige un video en Generador para cargar un fotograma)"
+            : "1920×1080 preview (select a video in Generator to load a frame)";
+        }
+
+        requestAnimationFrame(() => {
+          applyTypographyAndPosition();
+          renderActiveStep();
+        });
+      }
+
+      async function reloadRandomFrame() {
+        const metaEl = document.getElementById("preview-meta");
+        metaEl.innerText =
+          currentCfg && currentCfg.app_language === "es"
+            ? "Cargando fotograma aleatorio..."
+            : "Loading random frame...";
+        try {
+          const frame = await window.pywebview.api.get_preview_frame(
+            currentInputPath
+          );
+          applyFrameData(frame);
+        } catch (e) {
+          applyFrameData(null);
+        }
+      }
+
+      function applyIncomingState(state, frame) {
+        if (!state) return;
+        const sig = JSON.stringify({
+          cfg: state.cfg,
+          sub_style: state.sub_style,
+          words_per_line: state.words_per_line,
+          input_path: state.input_path,
+        });
+
+        const styleChanged =
+          state.sub_style && state.sub_style !== currentStyle;
+        if (state.cfg) currentCfg = state.cfg;
+        if (state.sub_style) currentStyle = state.sub_style;
+        if (state.words_per_line) currentWordsPerLine = state.words_per_line;
+        if (typeof state.input_path === "string") {
+          currentInputPath = state.input_path;
+        }
+
+        if (frame !== undefined) {
+          lastStateSignature = sig;
+          applyFrameData(frame);
+          restartStyleAnimationLoop();
+          return;
+        }
+
+        if (sig !== lastStateSignature) {
+          lastStateSignature = sig;
+          if (styleChanged || currentStyle === "zoom-in") {
+            restartStyleAnimationLoop();
+          } else {
+            applyTypographyAndPosition();
+            renderActiveStep();
+          }
+        }
+      }
+
+      window.receivePreviewUpdate = function (state, frame) {
+        applyIncomingState(state, frame);
+      };
+
+      window.addEventListener("resize", () => {
+        applyTypographyAndPosition();
+      });
+
+      window.addEventListener("pywebviewready", async () => {
+        const initData = await window.pywebview.api.get_initial_preview_data();
+        if (initData) {
+          applyIncomingState(initData, initData.frame);
+        }
+
+        // Sincronización periódica ligera con la ventana principal
+        setInterval(async () => {
+          try {
+            const live = await window.pywebview.api.get_live_preview_state();
+            if (live) {
+              applyIncomingState(live);
+            }
+          } catch (e) {}
+        }, 300);
+      });
+    </script>
+  </body>
+</html>

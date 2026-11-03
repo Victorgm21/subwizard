@@ -2,6 +2,7 @@ from utils.config_loader import get_ass_config
 
 
 def ass_header(width, height, cfg):
+    shadow = 2 if cfg.get("outline_size", 0) > 0 else 0
     return [
         "[Script Info]",
         "Title: Zoom In Style Subtitles",
@@ -24,7 +25,7 @@ def ass_header(width, height, cfg):
         f"{cfg['italic']},"
         f"0,0,100,100,0,0,1,"
         f"{cfg['outline_size']},"
-        f"0,"
+        f"{shadow},"
         f"{cfg['alignment']},"
         f"80,80,"
         f"{cfg['margin_v']},"
@@ -49,9 +50,9 @@ def zoom_in_style(words, max_words_per_line, width, height):
         max_words_per_line = 1
 
     cfg           = get_ass_config("zoom_in")
-    anim_duration = cfg["style_params"].get("anim_duration", 90)
-    start_scale   = cfg["style_params"].get("start_scale", 25)
-    accel         = cfg["style_params"].get("accel", 5)
+    anim_duration = cfg["style_params"].get("anim_duration", 120)
+    start_scale   = cfg["style_params"].get("start_scale", 70)
+    accel         = cfg["style_params"].get("accel", 0.5)
 
     ass_lines = []
     ass_lines.extend(ass_header(width, height, cfg))
@@ -70,7 +71,7 @@ def zoom_in_style(words, max_words_per_line, width, height):
         text = " ".join(w["word"] for w in group)
 
         animated_text = (
-            f"{{\\fscx{start_scale}\\fscy{start_scale}\\alpha&HFF&"
+            f"{{\\fscx{start_scale}\\fscy{start_scale}\\alpha&H35&"
             f"\\t(0,{anim_duration},{accel},\\fscx100\\fscy100\\alpha&H00&)}}{text}"
         )
 

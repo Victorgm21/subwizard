@@ -27,9 +27,42 @@ def _find_ffmpeg_executable(ffmpeg_path):
     return ffmpeg_path
 
 
-def burn_subtitles_into_video(new_video_name, video_path, srt_path, output_path=None):
+def _merge_intervals(intervals, pad=0.02):
     """
-    Quema (burn) un archivo de subtítulos (.srt o .ass) dentro del video usando ffmpeg.
+    Fusiona intervalos de tiempo superpuestos o muy cercanos para construir
+    una expresión compacta de censura de audio en FFmpeg.
+    """
+    if not intervals:
+        return []
+    padded = sorted(
+        (max(0.0, float(s) - pad), max(0.0, float(e) + pad))
+        for s, e in intervals
+        if float(e) > float(s)
+    )
+    if not padded:
+        return []
+    merged = [padded[0]]
+    for s, e in padded[1:]:
+        prev_s, prev_e = merged[-1]
+        if s <= prev_e + 0.03:
+            merged[-1] = (prev_s, max(prev_e, e))
+        else:
+            merged.append((s, e))
+    return merged
+
+
+def burn_subtitles_into_video(
+    new_video_name,
+    video_path,
+    srt_path,
+    output_path=None,
+    censored_intervals=None,
+    beep_enabled=True,
+    beep_volume=35,
+):
+    """
+    Quema (burn) un archivo de subtítulos (.srt o .ass) dentro del video usando ffmpeg,
+    y opcionalmente aplica un pitido suave sobre las palabras baneadas.
     Devuelve la ruta del vídeo generado.
     """
     ffmpeg_path = ensure_ffmpeg()
@@ -74,14 +107,53 @@ def burn_subtitles_into_video(new_video_name, video_path, srt_path, output_path=
     else:
         vf_arg = f"subtitles={shlex.quote(abs_srt)}"
 
-    cmd = [
-        ffmpeg_exec,
-        "-y",
-        "-i", video_path,
-        "-vf", vf_arg,
-        "-c:a", "copy",
-        video_output_path
-    ]
+    merged_censor = _merge_intervals(censored_intervals) if beep_enabled else []
+
+    if merged_censor:
+        cond = "+".join(f"between(t,{s:.3f},{e:.3f})" for s, e in merged_censor)
+        vol_pct = max(0.0, min(100.0, float(beep_volume)))
+
+        if vol_pct <= 0.0:
+            # Solo silenciar las palabras baneadas sin pitido
+            cmd = [
+                ffmpeg_exec,
+                "-y",
+                "-i", video_path,
+                "-vf", vf_arg,
+                "-af", f"volume=0:enable='{cond}'",
+                "-c:a", "aac",
+                "-b:a", "192k",
+                video_output_path,
+            ]
+        else:
+            # Silenciar voz original y mezclar pitido suave (750Hz filtrado)
+            gain = (vol_pct / 100.0) * 1.8
+            filter_complex = (
+                f"[0:a]volume=0:enable='{cond}'[a_clean];"
+                f"sine=frequency=750,lowpass=f=1200,volume=0:enable='not({cond})',volume={gain:.3f}[beep];"
+                f"[a_clean][beep]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[aout]"
+            )
+            cmd = [
+                ffmpeg_exec,
+                "-y",
+                "-i", video_path,
+                "-vf", vf_arg,
+                "-filter_complex", filter_complex,
+                "-map", "0:v:0",
+                "-map", "[aout]",
+                "-c:a", "aac",
+                "-b:a", "192k",
+                video_output_path,
+            ]
+    else:
+        cmd = [
+            ffmpeg_exec,
+            "-y",
+            "-i", video_path,
+            "-vf", vf_arg,
+            "-c:a", "copy",
+            video_output_path,
+        ]
 
     try:
         print("COMANDO A EJECUTAR:", " ".join(shlex.quote(x) for x in cmd))
@@ -99,8 +171,24 @@ def burn_subtitles_into_video(new_video_name, video_path, srt_path, output_path=
     return video_output_path
 
 
-def render_video(video_path, video_name, srt_file_path, output_path):
+def render_video(
+    video_path,
+    video_name,
+    srt_file_path,
+    output_path,
+    censored_intervals=None,
+    beep_enabled=True,
+    beep_volume=35,
+):
     if not is_video_file(video_path):
         raise ValueError("Invalid video file")
 
-    return burn_subtitles_into_video(video_name, video_path, srt_file_path, output_path)
+    return burn_subtitles_into_video(
+        video_name,
+        video_path,
+        srt_file_path,
+        output_path,
+        censored_intervals=censored_intervals,
+        beep_enabled=beep_enabled,
+        beep_volume=beep_volume,
+    )

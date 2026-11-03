@@ -5,15 +5,18 @@ import os
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config.json")
 
 DEFAULT_CONFIG = {
+    "app_language": "en",
     "font": {
-        "family": "Montserrat",
-        "size": 80,
+        "family": "Tahoma",
+        "size": 68,
         "bold": True,
-        "italic": False
+        "italic": False,
+        "uppercase": True,
+        "remove_punctuation": True
     },
     "colors": {
         "text": "#FFFFFF",
-        "highlight": "#E48200",
+        "highlight": "#A855F7",
         "outline": "#000000",
         "background": "#000000",
         "background_opacity": 100
@@ -21,18 +24,23 @@ DEFAULT_CONFIG = {
     "outline_size": 4,
     "position": {
         "alignment": "bottom_center",
-        "offset_y": 50
+        "offset_y": 110
     },
     "styles": {
         "karaoke": {},
         "word_pop": {
-            "pop_scale": 130
+            "pop_scale": 122
         },
         "zoom_in": {
-            "anim_duration": 150,
-            "start_scale": 25,
-            "accel": 3
+            "anim_duration": 120,
+            "start_scale": 70,
+            "accel": 0.5
         }
+    },
+    "banned_words": [],
+    "banned_audio": {
+        "enabled": True,
+        "volume": 35
     }
 }
 

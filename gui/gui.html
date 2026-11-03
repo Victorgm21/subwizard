@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SubWizard</title>
+    <title>SubWizard — Videos Powered by AI</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -14,15 +14,61 @@
       <aside class="sidebar">
         <div class="app-brand">
           <span class="brand-name">SubWizard</span>
-          <span class="brand-tag">Subtitle Studio</span>
+          <span class="brand-tag" data-i18n="brand_tag">Videos powered by AI</span>
         </div>
 
         <nav class="nav-list">
-          <button class="tab-btn active" onclick="switchTab('home', this)">
-            Generator
+          <button
+            class="tab-btn active"
+            onclick="switchTab('home', this)"
+          >
+            <span class="tab-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M7 15h4M15 15h2M7 11h2M13 11h4" />
+              </svg>
+            </span>
+            <span data-i18n="nav_generator">Generator</span>
           </button>
-          <button class="tab-btn" onclick="switchTab('settings', this)">
-            Appearance
+          <button
+            class="tab-btn"
+            onclick="switchTab('settings', this)"
+          >
+            <span class="tab-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+              </svg>
+            </span>
+            <span data-i18n="nav_appearance">Appearance</span>
+          </button>
+          <button
+            class="tab-btn"
+            onclick="switchTab('banned', this)"
+          >
+            <span class="tab-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+              </svg>
+            </span>
+            <span data-i18n="nav_banned">Banned Words</span>
+          </button>
+          <button
+            class="tab-btn"
+            onclick="switchTab('options', this)"
+          >
+            <span class="tab-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </span>
+            <span data-i18n="nav_options">Options</span>
           </button>
         </nav>
       </aside>
@@ -36,44 +82,111 @@
         <!-- ======================== -->
         <div id="tab-home" class="tab-content active">
           <header class="view-header">
-            <h2>Subtitle Generator</h2>
-            <p>Transcribe and burn subtitles for a single file or a full folder</p>
+            <h2 data-i18n="gen_title">Subtitle Generator</h2>
+            <p data-i18n="gen_subtitle">
+              Transcribe and burn subtitles for a single file or a full folder
+            </p>
           </header>
 
           <!-- FILA SUPERIOR: ENTRADA Y SALIDA -->
           <div class="groups-grid">
             <!-- GRUPO: ENTRADA -->
             <section class="group-section">
-              <h3 class="group-title">Source</h3>
-              <div class="group-card">
-                <div class="form-row">
-                  <label for="input-path">Video / Audio</label>
-                  <div class="row-control wide">
-                    <input
-                      type="text"
-                      id="input-path"
-                      placeholder="No file or folder selected"
-                      readonly
-                    />
-                    <button
-                      type="button"
-                      class="btn-secondary"
-                      onclick="selectInputFile()"
-                    >
-                      File...
-                    </button>
-                    <button
-                      type="button"
-                      class="btn-secondary"
-                      onclick="selectInputFolder()"
-                    >
-                      Folder...
-                    </button>
-                  </div>
+              <h3 class="group-title">
+                <span class="group-title-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </span>
+                <span data-i18n="group_source">Source</span>
+              </h3>
+              <div class="group-card io-card">
+                <div class="io-buttons-grid">
+                  <button
+                    type="button"
+                    id="btn-source-file"
+                    class="io-action-btn"
+                    onclick="selectInputFile()"
+                  >
+                    <span class="io-icon-badge">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect x="2" y="3" width="20" height="18" rx="3" />
+                        <polygon
+                          points="10 8 16 12 10 16 10 8"
+                          fill="currentColor"
+                          stroke="none"
+                        />
+                      </svg>
+                    </span>
+                    <span class="io-btn-copy">
+                      <span class="io-btn-title" data-i18n="btn_select_file">
+                        Select Media File
+                      </span>
+                      <span class="io-btn-sub" data-i18n="btn_select_file_sub">
+                        Single video or audio
+                      </span>
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    id="btn-source-folder"
+                    class="io-action-btn"
+                    onclick="selectInputFolder()"
+                  >
+                    <span class="io-icon-badge">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                        />
+                      </svg>
+                    </span>
+                    <span class="io-btn-copy">
+                      <span class="io-btn-title" data-i18n="btn_select_folder">
+                        Select Batch Folder
+                      </span>
+                      <span
+                        class="io-btn-sub"
+                        data-i18n="btn_select_folder_sub"
+                      >
+                        All media in folder
+                      </span>
+                    </span>
+                  </button>
                 </div>
-                <div class="form-row info-bar">
-                  <span class="helper-text" id="input-info">
-                    Select a single media file or a folder to process in batch
+
+                <input type="hidden" id="input-path" value="" />
+
+                <div class="io-status-strip">
+                  <span
+                    class="io-path-label"
+                    id="input-path-display"
+                    data-i18n="no_source_selected"
+                  >
+                    No file or folder selected yet
+                  </span>
+                  <span
+                    class="helper-text"
+                    id="input-info"
+                    data-i18n="choose_source_hint"
+                  >
+                    Choose a file or folder above to start
                   </span>
                 </div>
               </div>
@@ -81,37 +194,94 @@
 
             <!-- GRUPO: SALIDA -->
             <section class="group-section">
-              <h3 class="group-title">Destination</h3>
-              <div class="group-card">
-                <div class="form-row">
-                  <label id="label-output-filename" for="output-filename">
-                    File name
+              <h3 class="group-title">
+                <span class="group-title-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </span>
+                <span data-i18n="group_destination">Destination</span>
+              </h3>
+              <div class="group-card io-card">
+                <div class="io-dest-row">
+                  <button
+                    type="button"
+                    id="btn-dest-folder"
+                    class="io-action-btn io-dest-btn"
+                    onclick="selectFolder()"
+                  >
+                    <span class="io-icon-badge dest-badge">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                        />
+                        <path d="M12 11v6" />
+                        <path d="M9 14l3-3 3 3" />
+                      </svg>
+                    </span>
+                    <span class="io-btn-copy">
+                      <span class="io-btn-title" data-i18n="btn_dest_folder">
+                        Destination Folder
+                      </span>
+                      <span
+                        class="io-btn-sub"
+                        id="output-path-display"
+                        data-i18n="dest_folder_hint"
+                      >
+                        Auto-filled from source or click to browse...
+                      </span>
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="io-open-btn"
+                    title="Open Destination Folder"
+                    onclick="openOutputFolder()"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                  </button>
+                </div>
+
+                <input type="hidden" id="output-path" value="" />
+
+                <div class="form-row io-filename-row">
+                  <label
+                    id="label-output-filename"
+                    for="output-filename"
+                    data-i18n="lbl_output_filename"
+                  >
+                    Output file name
                   </label>
                   <input
                     id="output-filename"
                     type="text"
                     value="subwizard"
                     placeholder="Output file name"
+                    data-i18n-placeholder="ph_output_filename"
                   />
-                </div>
-
-                <div class="form-row">
-                  <label for="output-path">Destination folder</label>
-                  <div class="row-control wide">
-                    <input
-                      type="text"
-                      id="output-path"
-                      placeholder="Choose where to save..."
-                      readonly
-                    />
-                    <button
-                      type="button"
-                      class="btn-secondary"
-                      onclick="selectFolder()"
-                    >
-                      Browse...
-                    </button>
-                  </div>
                 </div>
               </div>
             </section>
@@ -119,10 +289,27 @@
 
           <!-- GRUPO: CONFIGURACIÓN -->
           <section class="group-section">
-            <h3 class="group-title">Transcription &amp; Format</h3>
+            <h3 class="group-title">
+              <span class="group-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                </svg>
+              </span>
+              <span data-i18n="group_transcription">Transcription &amp; Format</span>
+            </h3>
             <div class="group-card">
               <div class="form-row">
-                <label for="select-sub-style">Subtitle style</label>
+                <div class="label-with-info">
+                  <label for="select-sub-style" data-i18n="lbl_sub_style">
+                    Subtitle style
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_sub_style"
+                    data-tooltip="Choose the visual animation style: Simple (.srt classic lines), Karaoke (highlights spoken words), Word Pop (active word pops in size &amp; color), or Zoom In (smooth entrance zoom)."
+                  >?</span>
+                </div>
                 <select id="select-sub-style">
                   <option value="simple">Simple (.srt)</option>
                   <option value="karaoke">Karaoke (.ass)</option>
@@ -132,54 +319,170 @@
               </div>
 
               <div class="form-row">
-                <label for="select-output-type">Output format</label>
+                <div class="label-with-info">
+                  <label for="select-output-type" data-i18n="lbl_output_format">
+                    Output format
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_output_format"
+                    data-tooltip="Only Video burns the subtitles directly into an .mp4 file. Only Subtitles exports just the .srt/.ass file. Both keeps the video and the subtitle file."
+                  >?</span>
+                </div>
                 <select id="select-output-type">
-                  <option value="mp4" selected>Only Video (.mp4)</option>
-                  <option value="subtitles">Only Subtitles (.srt / .ass)</option>
-                  <option value="both">Both (Video + Subtitles)</option>
+                  <option value="mp4" selected data-i18n="opt_only_video">
+                    Only Video (.mp4)
+                  </option>
+                  <option value="subtitles" data-i18n="opt_only_subs">
+                    Only Subtitles (.srt / .ass)
+                  </option>
+                  <option value="both" data-i18n="opt_both_out">
+                    Both (Video + Subtitles)
+                  </option>
                 </select>
               </div>
 
               <div class="form-row">
-                <label for="select-performance">Whisper model</label>
+                <div class="label-with-info">
+                  <label
+                    for="select-performance"
+                    data-i18n="lbl_whisper_model"
+                  >
+                    Whisper model
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_whisper_model"
+                    data-tooltip="Larger models offer higher transcription accuracy at the cost of processing speed and memory. 'Normal (Small)' is recommended for most videos."
+                  >?</span>
+                </div>
                 <select id="select-performance">
-                  <option value="efficient">Efficient (Base)</option>
-                  <option value="normal" selected>Normal (Small)</option>
-                  <option value="detailed">Detailed (Medium)</option>
-                  <option value="ultra-detailed">Ultra-detailed (Large)</option>
+                  <option value="efficient" data-i18n="opt_perf_efficient">
+                    Efficient (Base)
+                  </option>
+                  <option value="normal" selected data-i18n="opt_perf_normal">
+                    Normal (Small)
+                  </option>
+                  <option value="detailed" data-i18n="opt_perf_detailed">
+                    Detailed (Medium)
+                  </option>
+                  <option value="ultra-detailed" data-i18n="opt_perf_ultra">
+                    Ultra-detailed (Large)
+                  </option>
                 </select>
               </div>
 
               <div class="form-row">
-                <label for="select-language">Spoken language</label>
+                <div class="label-with-info">
+                  <label for="select-language" data-i18n="lbl_spoken_lang">
+                    Spoken language
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_spoken_lang"
+                    data-tooltip="Auto-detect identifies the language automatically. Selecting the language manually can slightly improve speed and accuracy on very short clips."
+                  >?</span>
+                </div>
                 <select id="select-language">
-                  <option value="auto">Auto-detect</option>
+                  <option value="auto" data-i18n="opt_lang_auto">
+                    Auto-detect
+                  </option>
                   <option value="en">English</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
+                  <option value="es">Español</option>
+                  <option value="fr">Français</option>
                   <option value="de">Deutsch</option>
-                  <option value="ja">Japanese</option>
-                  <option value="ko">Korean</option>
+                  <option value="ja">日本語 (Japanese)</option>
+                  <option value="ko">한국어 (Korean)</option>
                 </select>
               </div>
 
               <div class="form-row">
-                <label for="words-per-line">Words per line</label>
+                <div class="label-with-info">
+                  <label for="words-per-line" data-i18n="lbl_words_per_line">
+                    Words per line
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_words_per_line"
+                    data-tooltip="Maximum number of words shown simultaneously in each subtitle phrase. Use 3–5 words for dynamic Shorts/Reels or 6–8 for horizontal videos."
+                  >?</span>
+                </div>
                 <input type="number" value="5" min="1" id="words-per-line" />
+              </div>
+
+              <div class="form-row">
+                <div class="label-with-info">
+                  <label for="chk-vad-filter" data-i18n="lbl_vad_filter">
+                    Anti-hallucination filter (VAD)
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_vad_filter"
+                    data-tooltip="Voice Activity Detection (VAD) filters out silences and background music so Whisper doesn't invent phantom text. Disable only for songs, whispers, or ASMR."
+                  >?</span>
+                </div>
+                <input
+                  type="checkbox"
+                  id="chk-vad-filter"
+                  class="cfg-checkbox"
+                  checked
+                />
               </div>
             </div>
           </section>
 
           <!-- BARRA INFERIOR DE ACCIÓN -->
           <footer class="bottom-bar">
-            <p class="status-text" id="status-text">Ready</p>
-            <button
-              id="btn-generate"
-              class="btn-primary"
-              onclick="generateSubtitles()"
-            >
-              Generate Subtitles
-            </button>
+            <div class="bottom-bar-inner">
+              <p class="status-text" id="status-text" data-i18n="status_ready">
+                Ready
+              </p>
+              <div class="bottom-actions">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  onclick="openLivePreview()"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_live_preview">Live Preview</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  onclick="openOutputFolder()"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_open_output">Open Output Folder</span>
+                </button>
+                <button
+                  id="btn-generate"
+                  class="btn-primary"
+                  onclick="generateSubtitles()"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+                      <path d="M5 3v4M3 5h4M19 17v4M17 19h4"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_generate">Generate Subtitles</span>
+                </button>
+              </div>
+            </div>
           </footer>
         </div>
 
@@ -188,8 +491,10 @@
         <!-- ======================== -->
         <div id="tab-settings" class="tab-content">
           <header class="view-header">
-            <h2>Appearance &amp; Style Parameters</h2>
-            <p>Customize typography, colors, alignment, and animation behavior</p>
+            <h2 data-i18n="app_title">Appearance &amp; Style Parameters</h2>
+            <p data-i18n="app_subtitle">
+              Customize typography, colors, alignment, and animation behavior
+            </p>
           </header>
 
           <div class="groups-grid">
@@ -197,18 +502,36 @@
             <div>
               <!-- GRUPO: TIPOGRAFÍA -->
               <section class="group-section">
-                <h3 class="group-title">Typography</h3>
+                <h3 class="group-title">
+                  <span class="group-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="4 7 4 4 20 4 20 7"/>
+                      <line x1="9" y1="20" x2="15" y2="20"/>
+                      <line x1="12" y1="4" x2="12" y2="20"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="group_typography">Typography</span>
+                </h3>
                 <div class="group-card">
                   <div class="form-row">
-                    <label for="cfg-font-family">Font family</label>
+                    <label for="cfg-font-family" data-i18n="lbl_font_family">
+                      Font family
+                    </label>
                     <select id="cfg-font-family"></select>
                   </div>
                   <div class="form-row">
-                    <label for="cfg-font-size">Font size (px)</label>
-                    <input type="number" id="cfg-font-size" min="10" max="200" />
+                    <label for="cfg-font-size" data-i18n="lbl_font_size">
+                      Font size (px)
+                    </label>
+                    <input
+                      type="number"
+                      id="cfg-font-size"
+                      min="10"
+                      max="200"
+                    />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-font-bold">Bold</label>
+                    <label for="cfg-font-bold" data-i18n="lbl_bold">Bold</label>
                     <input
                       type="checkbox"
                       id="cfg-font-bold"
@@ -216,10 +539,32 @@
                     />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-font-italic">Italic</label>
+                    <label for="cfg-font-italic" data-i18n="lbl_italic">
+                      Italic
+                    </label>
                     <input
                       type="checkbox"
                       id="cfg-font-italic"
+                      class="cfg-checkbox"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-font-uppercase" data-i18n="lbl_uppercase">
+                      Uppercase (ALL CAPS)
+                    </label>
+                    <input
+                      type="checkbox"
+                      id="cfg-font-uppercase"
+                      class="cfg-checkbox"
+                    />
+                  </div>
+                  <div class="form-row">
+                    <label for="cfg-font-nopunct" data-i18n="lbl_nopunct">
+                      Remove punctuation
+                    </label>
+                    <input
+                      type="checkbox"
+                      id="cfg-font-nopunct"
                       class="cfg-checkbox"
                     />
                   </div>
@@ -228,18 +573,36 @@
 
               <!-- GRUPO: POSICIÓN -->
               <section class="group-section">
-                <h3 class="group-title">Position</h3>
+                <h3 class="group-title">
+                  <span class="group-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <path d="M3 9h18M3 15h18"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="group_position">Position</span>
+                </h3>
                 <div class="group-card">
                   <div class="form-row">
-                    <label for="cfg-alignment">Screen alignment</label>
+                    <label for="cfg-alignment" data-i18n="lbl_alignment">
+                      Screen alignment
+                    </label>
                     <select id="cfg-alignment">
-                      <option value="bottom_center">Bottom center</option>
-                      <option value="middle_center">Middle center</option>
-                      <option value="top_center">Top center</option>
+                      <option value="bottom_center" data-i18n="opt_align_bottom">
+                        Bottom center
+                      </option>
+                      <option value="middle_center" data-i18n="opt_align_middle">
+                        Middle center
+                      </option>
+                      <option value="top_center" data-i18n="opt_align_top">
+                        Top center
+                      </option>
                     </select>
                   </div>
                   <div class="form-row">
-                    <label for="cfg-offset-y">Vertical margin (px)</label>
+                    <label for="cfg-offset-y" data-i18n="lbl_offset_y">
+                      Vertical margin (px)
+                    </label>
                     <input type="number" id="cfg-offset-y" min="0" />
                   </div>
                 </div>
@@ -250,24 +613,47 @@
             <div>
               <!-- GRUPO: COLORES Y BORDE -->
               <section class="group-section">
-                <h3 class="group-title">Colors &amp; Outline</h3>
+                <h3 class="group-title">
+                  <span class="group-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+                      <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+                      <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+                      <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="group_colors">Colors &amp; Outline</span>
+                </h3>
                 <div class="group-card">
                   <div class="form-row">
-                    <label for="cfg-color-text">Primary text</label>
+                    <label for="cfg-color-text" data-i18n="lbl_color_text">
+                      Primary text
+                    </label>
                     <input type="color" id="cfg-color-text" />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-color-highlight">
+                    <label
+                      for="cfg-color-highlight"
+                      data-i18n="lbl_color_highlight"
+                    >
                       Active word highlight
                     </label>
                     <input type="color" id="cfg-color-highlight" />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-color-outline">Outline color</label>
+                    <label
+                      for="cfg-color-outline"
+                      data-i18n="lbl_color_outline"
+                    >
+                      Outline color
+                    </label>
                     <input type="color" id="cfg-color-outline" />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-outline-size">Outline thickness</label>
+                    <label for="cfg-outline-size" data-i18n="lbl_outline_size">
+                      Outline thickness
+                    </label>
                     <input
                       type="number"
                       id="cfg-outline-size"
@@ -276,11 +662,16 @@
                     />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-color-background">Shadow / Background</label>
+                    <label
+                      for="cfg-color-background"
+                      data-i18n="lbl_color_bg"
+                    >
+                      Shadow / Background
+                    </label>
                     <input type="color" id="cfg-color-background" />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-bg-opacity">
+                    <label for="cfg-bg-opacity" data-i18n="lbl_bg_opacity">
                       Background transparency (%)
                     </label>
                     <input
@@ -295,10 +686,22 @@
 
               <!-- GRUPO: ANIMACIONES -->
               <section class="group-section">
-                <h3 class="group-title">Animation Parameters</h3>
+                <h3 class="group-title">
+                  <span class="group-title-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="group_animations">Animation Parameters</span>
+                </h3>
                 <div class="group-card">
                   <div class="form-row">
-                    <label for="cfg-wordpop-scale">Word Pop — Scale (%)</label>
+                    <label
+                      for="cfg-wordpop-scale"
+                      data-i18n="lbl_wordpop_scale"
+                    >
+                      Word Pop — Scale (%)
+                    </label>
                     <input
                       type="number"
                       id="cfg-wordpop-scale"
@@ -307,7 +710,10 @@
                     />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-zoomin-duration">
+                    <label
+                      for="cfg-zoomin-duration"
+                      data-i18n="lbl_zoomin_duration"
+                    >
                       Zoom In — Duration (ms)
                     </label>
                     <input
@@ -318,7 +724,10 @@
                     />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-zoomin-startscale">
+                    <label
+                      for="cfg-zoomin-startscale"
+                      data-i18n="lbl_zoomin_startscale"
+                    >
                       Zoom In — Initial scale (%)
                     </label>
                     <input
@@ -329,13 +738,18 @@
                     />
                   </div>
                   <div class="form-row">
-                    <label for="cfg-zoomin-accel">Zoom In — Acceleration</label>
+                    <label
+                      for="cfg-zoomin-accel"
+                      data-i18n="lbl_zoomin_accel"
+                    >
+                      Zoom In — Acceleration
+                    </label>
                     <input
                       type="number"
                       id="cfg-zoomin-accel"
-                      min="1"
+                      min="0.1"
                       max="10"
-                      step="0.5"
+                      step="0.1"
                     />
                   </div>
                 </div>
@@ -345,10 +759,346 @@
 
           <!-- BARRA INFERIOR DE ACCIÓN -->
           <footer class="bottom-bar">
-            <p class="status-text" id="status-settings">Settings loaded</p>
-            <button class="btn-primary" onclick="saveConfig()">
-              Save Changes
-            </button>
+            <div class="bottom-bar-inner">
+              <p
+                class="status-text"
+                id="status-settings"
+                data-i18n="status_settings_loaded"
+              >
+                Settings loaded
+              </p>
+              <div class="bottom-actions">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  onclick="openLivePreview()"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_live_preview">Live Preview</span>
+                </button>
+                <button
+                  class="btn-primary"
+                  onclick="saveConfig('settings')"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_save_changes">Save Changes</span>
+                </button>
+              </div>
+            </div>
+          </footer>
+        </div>
+
+        <!-- ======================== -->
+        <!--      TAB BANNED WORDS    -->
+        <!-- ======================== -->
+        <div id="tab-banned" class="tab-content">
+          <header class="view-header">
+            <h2 data-i18n="ban_title">Banned Words</h2>
+            <p data-i18n="ban_subtitle">
+              Words added here are censored with asterisks (***) in subtitles and a soft audio bleep in the video
+            </p>
+          </header>
+
+          <!-- GRUPO: AUDIO BLEEP CENSORSHIP -->
+          <section class="group-section">
+            <h3 class="group-title">
+              <span class="group-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                </svg>
+              </span>
+              <span data-i18n="group_audio_bleep">Audio Bleep Censorship</span>
+            </h3>
+            <div class="group-card">
+              <div class="form-row">
+                <div class="label-with-info">
+                  <label for="cfg-beep-enabled" data-i18n="lbl_beep_enabled">
+                    Censor audio with soft beep
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_beep_enabled"
+                    data-tooltip="When exporting video (.mp4), mutes the spoken banned word and plays a soft 750 Hz bleep tone over it."
+                  >?</span>
+                </div>
+                <input
+                  type="checkbox"
+                  id="cfg-beep-enabled"
+                  class="cfg-checkbox"
+                  checked
+                />
+              </div>
+
+              <div class="form-row">
+                <div class="label-with-info">
+                  <label for="cfg-beep-volume" data-i18n="lbl_beep_volume">
+                    Beep volume
+                  </label>
+                  <span
+                    class="info-badge"
+                    tabindex="0"
+                    data-i18n-tooltip="tip_beep_volume"
+                    data-tooltip="Adjust the loudness of the censor beep (0% = silent mute only, 35% = soft beep, 100% = loud bleep)."
+                  >?</span>
+                </div>
+                <div class="beep-volume-control">
+                  <input
+                    type="range"
+                    id="cfg-beep-volume"
+                    min="0"
+                    max="100"
+                    value="35"
+                    oninput="updateBeepVolumeLabel(this.value)"
+                  />
+                  <span id="beep-volume-label" class="beep-volume-label">
+                    35%
+                  </span>
+                  <button
+                    type="button"
+                    class="btn-secondary btn-xs"
+                    onclick="playTestBeep()"
+                  >
+                    <span class="btn-icon">
+                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" width="12" height="12">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                      </svg>
+                    </span>
+                    <span data-i18n="btn_test_beep">Test Beep</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- GRUPO: AGREGAR PALABRA -->
+          <section class="group-section">
+            <h3 class="group-title">
+              <span class="group-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="16"/>
+                  <line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+              </span>
+              <span data-i18n="group_add_banned">Add Words to Censor</span>
+            </h3>
+            <div class="group-card">
+              <div class="form-row">
+                <label for="input-banned-word" data-i18n="lbl_word_phrase">
+                  Word or phrase
+                </label>
+                <div class="row-control wide banned-input-row">
+                  <input
+                    type="text"
+                    id="input-banned-word"
+                    placeholder="Type word(s), separated by commas..."
+                    data-i18n-placeholder="ph_banned_word"
+                    onkeydown="if(event.key === 'Enter') addBannedWord()"
+                  />
+                  <button
+                    type="button"
+                    class="btn-primary"
+                    onclick="addBannedWord()"
+                  >
+                    <span class="btn-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                    </span>
+                    <span data-i18n="btn_add_word">Add Word</span>
+                  </button>
+                </div>
+              </div>
+              <div class="form-row info-bar">
+                <span class="helper-text" data-i18n="ban_helper_text">
+                  Matching is case-insensitive. Example: "badword" becomes "*******" in the subtitle text.
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- GRUPO: LISTA DE PALABRAS BANEADAS -->
+          <section class="group-section">
+            <div class="group-header-row">
+              <h3 class="group-title">
+                <span class="group-title-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                  </svg>
+                </span>
+                <span data-i18n="group_banned_list">Banned Words List</span>
+                <span id="banned-count-meta" class="preview-meta">(0)</span>
+              </h3>
+              <button
+                type="button"
+                class="btn-secondary btn-xs"
+                onclick="clearBannedWords()"
+              >
+                <span class="btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </span>
+                <span data-i18n="btn_clear_all">Clear All</span>
+              </button>
+            </div>
+            <div class="group-card">
+              <div id="banned-tags-container" class="banned-tags-container">
+                <span class="helper-text" data-i18n="ban_empty">
+                  No banned words added yet.
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- BARRA INFERIOR DE ACCIÓN -->
+          <footer class="bottom-bar">
+            <div class="bottom-bar-inner">
+              <p class="status-text" id="status-banned" data-i18n="status_ready">
+                Ready
+              </p>
+              <div class="bottom-actions">
+                <button
+                  class="btn-primary"
+                  onclick="saveConfig('banned')"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_save_changes">Save Changes</span>
+                </button>
+              </div>
+            </div>
+          </footer>
+        </div>
+
+        <!-- ======================== -->
+        <!--       TAB OPTIONS        -->
+        <!-- ======================== -->
+        <div id="tab-options" class="tab-content">
+          <header class="view-header">
+            <h2 data-i18n="opt_title">Program Options</h2>
+            <p data-i18n="opt_subtitle">
+              General preferences and interface language for SubWizard
+            </p>
+          </header>
+
+          <section class="group-section">
+            <h3 class="group-title">
+              <span class="group-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </span>
+              <span data-i18n="group_general_options">General</span>
+            </h3>
+            <div class="group-card">
+              <div class="form-row">
+                <label for="cfg-app-language" data-i18n="lbl_app_language">
+                  Program language
+                </label>
+                <select
+                  id="cfg-app-language"
+                  onchange="onLanguageSelectChange(this.value)"
+                >
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- GESTIÓN DE MODELOS DE WHISPER -->
+          <section class="group-section">
+            <div class="group-header-row">
+              <h3 class="group-title">
+                <span class="group-title-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="12" x2="2" y2="12"/>
+                    <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+                    <line x1="6" y1="16" x2="6.01" y2="16"/>
+                    <line x1="10" y1="16" x2="10.01" y2="16"/>
+                  </svg>
+                </span>
+                <span data-i18n="group_whisper_cache">Installed Whisper Models</span>
+                <span id="models-total-size" class="preview-meta"></span>
+              </h3>
+              <div class="header-actions">
+                <button
+                  type="button"
+                  class="btn-secondary btn-xs"
+                  onclick="loadInstalledModels()"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="23 4 23 10 17 10"/>
+                      <polyline points="1 20 1 14 7 14"/>
+                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_refresh">Refresh</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn-secondary btn-xs"
+                  onclick="openModelsFolder()"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_open_cache_folder">Open Cache Folder</span>
+                </button>
+              </div>
+            </div>
+            <div class="group-card">
+              <div id="models-list-container" class="models-list-container">
+                <span class="helper-text" data-i18n="loading_models">
+                  Loading installed models...
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <footer class="bottom-bar">
+            <div class="bottom-bar-inner">
+              <p class="status-text" id="status-options" data-i18n="status_ready">
+                Ready
+              </p>
+              <div class="bottom-actions">
+                <button
+                  class="btn-primary"
+                  onclick="saveConfig('options')"
+                >
+                  <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </span>
+                  <span data-i18n="btn_save_changes">Save Changes</span>
+                </button>
+              </div>
+            </div>
           </footer>
         </div>
       </main>

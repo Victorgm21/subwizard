@@ -2,6 +2,7 @@ from utils.config_loader import get_ass_config
 
 
 def ass_header(width, height, cfg):
+    shadow = 2 if cfg.get("outline_size", 0) > 0 else 0
     return [
         "[Script Info]",
         "Title: Word Pop Style Subtitles",
@@ -24,7 +25,7 @@ def ass_header(width, height, cfg):
         f"{cfg['italic']},"
         f"0,0,100,100,0,0,1,"
         f"{cfg['outline_size']},"
-        f"0,"
+        f"{shadow},"
         f"{cfg['alignment']},"
         f"80,80,"
         f"{cfg['margin_v']},"
@@ -36,14 +37,14 @@ def ass_header(width, height, cfg):
     ]
 
 
-def ass_word_pop(word, active=False, cfg=None, pop_scale=130):
+def ass_word_pop(word, active=False, cfg=None, pop_scale=122):
     if active:
         highlight = cfg["highlight_color"] if cfg else "&H00E48200&"
         primary   = cfg["primary_color"]   if cfg else "&H00FFFFFF&"
         return (
-            f"{{\\fscx{pop_scale}\\fscy{pop_scale}\\c{highlight}}}"
+            f"{{\\c{highlight}\\fscx100\\fscy100\\t(0,65,0.5,\\fscx{pop_scale}\\fscy{pop_scale})}}"
             f"{word}"
-            f"{{\\fscx100\\fscy100\\c{primary}}}"
+            f"{{\\t(0,0,\\fscx100\\fscy100)\\fscx100\\fscy100\\c{primary}}}"
         )
     return word
 

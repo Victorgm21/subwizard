@@ -1,5 +1,7 @@
 import os
 import re
+import random
+import base64
 import subprocess
 import shutil
 import json
@@ -203,3 +205,84 @@ def get_system_fonts():
         fonts = {"Arial", "Impact", "Montserrat", "Segoe UI", "Tahoma", "Verdana"}
 
     return sorted(fonts)
+
+
+def get_video_info(video_path):
+    """
+    Obtiene (width, height, duration) de un video usando ffprobe.
+    """
+    width, height = 1920, 1080
+    duration = 0.0
+    try:
+        ffprobe_path = ensure_ffprobe()
+        cmd = [
+            ffprobe_path,
+            "-v", "error",
+            "-select_streams", "v:0",
+            "-show_entries", "stream=width,height,duration:format=duration",
+            "-of", "json",
+            video_path,
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True, shell=False)
+        data = json.loads(result.stdout)
+        if data.get("streams"):
+            stream = data["streams"][0]
+            width = int(stream.get("width", 1920))
+            height = int(stream.get("height", 1080))
+            if stream.get("duration"):
+                duration = float(stream["duration"])
+        if duration <= 0 and data.get("format", {}).get("duration"):
+            duration = float(data["format"]["duration"])
+    except Exception as e:
+        print("Error reading video info:", e)
+
+    return width, height, duration
+
+
+def extract_random_frame(input_path):
+    """
+    Extrae un fotograma aleatorio del video (o del primer video de la carpeta)
+    y lo devuelve en base64 junto con su resolución real (width, height).
+    """
+    video_path = None
+    if input_path and os.path.isdir(input_path):
+        for f in get_media_files_in_folder(input_path):
+            if is_video_file(f):
+                video_path = f
+                break
+    elif input_path and os.path.isfile(input_path) and is_video_file(input_path):
+        video_path = input_path
+
+    if not video_path:
+        return {"ok": False, "width": 1920, "height": 1080, "data_url": None}
+
+    width, height, duration = get_video_info(video_path)
+    seek_time = random.uniform(duration * 0.1, duration * 0.85) if duration > 1.0 else 0.0
+
+    try:
+        ffmpeg_path = ensure_ffmpeg()
+        cmd = [
+            ffmpeg_path,
+            "-ss", f"{seek_time:.2f}",
+            "-i", video_path,
+            "-frames:v", "1",
+            "-f", "image2pipe",
+            "-vcodec", "mjpeg",
+            "-q:v", "4",
+            "-",
+        ]
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=True)
+        if res.stdout:
+            b64 = base64.b64encode(res.stdout).decode("ascii")
+            return {
+                "ok": True,
+                "width": width,
+                "height": height,
+                "data_url": f"data:image/jpeg;base64,{b64}",
+                "video_name": os.path.basename(video_path),
+            }
+    except Exception as e:
+        print("Error extracting random frame:", e)
+
+    return {"ok": False, "width": width, "height": height, "data_url": None}
+
