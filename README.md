@@ -1,4 +1,4 @@
-# 🎬 SubWizard — Videos Powered by AI
+# 🎬 SubWizard — No Cloud • No Subscriptions • Lightweight • All-in-One 🧙‍♂️
 
 <p align="center">
   <img src="assets/screenshot.png" alt="SubWizard" width="850">

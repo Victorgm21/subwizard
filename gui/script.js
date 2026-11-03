@@ -4,7 +4,7 @@
 
 const I18N = {
   en: {
-    brand_tag: "Videos Powered by AI",
+    brand_tag: "No Cloud • No Subscriptions • Lightweight • All-in-One",
     nav_generator: "Generator",
     nav_appearance: "Appearance",
     nav_banned: "Banned Words",
@@ -126,7 +126,7 @@ const I18N = {
     opt_subtitle: "General preferences and interface language for SubWizard",
     group_general_options: "General",
     lbl_app_language: "Program language",
-    window_title: "SubWizard — Videos Powered by AI",
+    window_title: "SubWizard — No Cloud • No Subscriptions • Lightweight • All-in-One",
     group_whisper_cache: "Installed Whisper Models",
     btn_open_cache_folder: "Open Cache Folder",
     btn_refresh: "Refresh",
@@ -139,7 +139,7 @@ const I18N = {
   },
 
   es: {
-    brand_tag: "Videos Potenciados por IA",
+    brand_tag: "Sin Nube • Sin Suscripciones • Ligero • Todo en Uno",
     nav_generator: "Generador",
     nav_appearance: "Apariencia",
     nav_banned: "Palabras Baneadas",
@@ -263,7 +263,7 @@ const I18N = {
     opt_subtitle: "Preferencias generales e idioma de la interfaz de SubWizard",
     group_general_options: "General",
     lbl_app_language: "Idioma del programa",
-    window_title: "SubWizard — Videos Potenciados por IA",
+    window_title: "SubWizard — Sin Nube • Sin Suscripciones • Ligero • Todo en Uno",
     group_whisper_cache: "Modelos Whisper Instalados",
     btn_open_cache_folder: "Abrir Carpeta de Caché",
     btn_refresh: "Actualizar",

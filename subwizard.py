@@ -636,7 +636,7 @@ class Api:
 if __name__ == "__main__":
     api = Api()
     webview.create_window(
-        title="SubWizard — Videos Powered by AI",
+        title="SubWizard — No Cloud • No Subscriptions • Lightweight • All-in-One",
         url="gui/gui.html",
         js_api=api,
         width=1260,
